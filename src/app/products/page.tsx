@@ -1,10 +1,10 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/product/ProductCard";
 import { useProductStore } from "@/store/useProductStore";
 import { ChevronRight, Filter, Star, Search } from "lucide-react";
-import { useState } from "react";
 
 const CATEGORIES = [
   "أكسيسوارات الكمبيوتر",
@@ -16,7 +16,7 @@ const CATEGORIES = [
 
 const BRANDS = ["Apple", "Samsung", "Sony", "Logitech", "JBL", "Xiaomi"];
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   const products = useProductStore((state) => state.products);
@@ -146,5 +146,13 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">جاري التحميل...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }
