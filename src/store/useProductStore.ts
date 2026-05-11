@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { supabase } from '@/lib/supabase';
 
 export interface Product {
   id: string;
   name: string;
   price: number;
-  image: string; // Keep this as the main thumbnail
-  images?: string[]; // Array of additional images
+  image: string;
+  images?: string[];
   rating: number;
   reviews: number;
   badge?: string;
@@ -15,23 +15,48 @@ export interface Product {
 
 interface ProductState {
   products: Product[];
-  addProduct: (product: Product) => void;
-  removeProduct: (id: string) => void;
-  setProducts: (products: Product[]) => void;
+  isLoading: boolean;
+  fetchProducts: () => Promise<void>;
+  addProduct: (product: Product) => Promise<void>;
+  removeProduct: (id: string) => Promise<void>;
 }
 
-const INITIAL_PRODUCTS: Product[] = [];
+export const useProductStore = create<ProductState>((set) => ({
+  products: [],
+  isLoading: true,
 
-export const useProductStore = create<ProductState>()(
-  persist(
-    (set) => ({
-      products: INITIAL_PRODUCTS,
-      addProduct: (product) => set((state) => ({ products: [product, ...state.products] })),
-      removeProduct: (id) => set((state) => ({ products: state.products.filter(p => p.id !== id) })),
-      setProducts: (products) => set({ products }),
-    }),
-    {
-      name: 'gdm-products-storage',
+  fetchProducts: async () => {
+    try {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      set({ products: data || [], isLoading: false });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      set({ isLoading: false });
     }
-  )
-);
+  },
+
+  addProduct: async (product) => {
+    try {
+      const { error } = await supabase.from('products').insert([product]);
+      if (error) throw error;
+      set((state) => ({ products: [product, ...state.products] }));
+    } catch (error) {
+      console.error('Error adding product:', error);
+      throw error;
+    }
+  },
+
+  removeProduct: async (id) => {
+    try {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) throw error;
+      set((state) => ({
+        products: state.products.filter((p) => p.id !== id),
+      }));
+    } catch (error) {
+      console.error('Error removing product:', error);
+      throw error;
+    }
+  },
+}));
