@@ -8,8 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "GADGETMGHRIB | أفضل متجر إلكترونيات في المغرب - Smart Tech, Better Life",
-  description: "اكتشف أحدث الساعات الذكية، السماعات، وإكسسوارات الهواتف في المغرب مع Gadget Maghrib. جودة عالية، أثمنة مناسبة، وتوصيل سريع لجميع المدن.",
+  title: "Gadget Maghrib | متجرك الإلكتروني المفضل في المغرب",
+  description: "اكتشف أفضل الساعات الذكية، السماعات، وإكسسوارات الهواتف في المغرب. جودة مضمونة، توصيل سريع، ودفع عند الاستلام مع Gadget Maghrib.",
   icons: {
     apple: "/logo.png",
   }
