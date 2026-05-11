@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 max-w-6xl flex flex-col md:flex-row items-center justify-between gap-12">
         
         {/* Left Side - Logo */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex flex-col items-center md:items-start gap-4">
           <Link href="/">
             <Image 
               src="/logo.png" 
@@ -18,6 +18,15 @@ export default function Footer() {
               className="w-48 md:w-64 h-auto object-contain mix-blend-screen" 
             />
           </Link>
+          <div className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 mt-4 text-xs text-white/50 font-bold uppercase tracking-tighter">
+            <Link href="/" className="hover:text-[#00d2ff]">Accueil</Link>
+            <Link href="/products" className="hover:text-[#00d2ff]">Boutique</Link>
+            <Link href="/categories" className="hover:text-[#00d2ff]">Catégories</Link>
+            <Link href="/track" className="hover:text-[#00d2ff]">Suivre ma commande</Link>
+            <Link href="/contact" className="hover:text-[#00d2ff]">Contact</Link>
+            <Link href="/terms" className="hover:text-[#00d2ff]">Conditions d'utilisation</Link>
+            <Link href="/privacy" className="hover:text-[#00d2ff]">Politique de confidentialité</Link>
+          </div>
         </div>
 
         {/* Right Side - Community & Categories */}
