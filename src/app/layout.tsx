@@ -26,9 +26,10 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${inter.className} text-[#282828] antialiased`}>
         <DynamicBackground>
-          <LayoutWrapper>
+          <Navbar />
+          <main className="min-h-screen">
             {children}
-          </LayoutWrapper>
+          </main>
         </DynamicBackground>
         <Toaster />
       </body>

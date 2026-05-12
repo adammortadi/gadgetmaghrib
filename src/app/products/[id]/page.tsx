@@ -2,6 +2,7 @@
 
 import React, { useState, use } from "react";
 import Image from "next/image";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Truck, Shield, Minus, Plus, ShoppingCart, CheckCircle, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
