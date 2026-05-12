@@ -47,6 +47,8 @@ export default function AdminDashboard() {
     badge: string;
     stock: string;
     backgroundColor: string;
+    customHtml: string;
+    customCss: string;
   }>({
     name: "",
     price: "",
@@ -54,13 +56,63 @@ export default function AdminDashboard() {
     images: [],
     badge: "",
     stock: "10",
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    customHtml: "",
+    customCss: ""
   });
 
   const [activeTab, setActiveTab] = useState<Tab>("inventory");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // ... (keeping existing functions like handleLogin, handleAddProduct)
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === "adam" && password === "adamtheg0d") {
+      setIsAuthenticated(true);
+      toast.success("مرحبا بك، آدم!");
+    } else {
+      toast.error("اسم المستخدم أو كلمة المرور غير صحيحة");
+    }
+  };
+
+  const handleAddProduct = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProduct.name || !newProduct.price || !newProduct.image) {
+      toast.error("Please fill all fields and add a photo!");
+      return;
+    }
+
+    addProduct({
+      id: Math.random().toString(36).substr(2, 9),
+      name: newProduct.name,
+      price: Number(newProduct.price),
+      image: newProduct.image,
+      images: newProduct.images.length > 0 ? newProduct.images : [newProduct.image],
+      rating: 5.0,
+      reviews: 0,
+      badge: newProduct.badge || undefined,
+      stock: Number(newProduct.stock),
+      backgroundColor: newProduct.backgroundColor,
+      customHtml: newProduct.customHtml || undefined,
+      customCss: newProduct.customCss || undefined
+    });
+
+    toast.success("Product added successfully!");
+    setIsAddModalOpen(false);
+    setNewProduct({ name: "", price: "", image: "", images: [], badge: "", stock: "10", backgroundColor: "#ffffff", customHtml: "", customCss: "" });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'html' | 'css') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        if (type === 'html') setNewProduct(prev => ({ ...prev, customHtml: content }));
+        if (type === 'css') setNewProduct(prev => ({ ...prev, customCss: content }));
+      };
+      reader.readAsText(file);
+    }
+  };
 
   const handleUpdateSettings = async (newSettings: any) => {
     await updateSettings(newSettings);
@@ -322,6 +374,29 @@ export default function AdminDashboard() {
                           className="w-32 h-12 text-center font-bold font-mono border-gray-100"
                         />
                      </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 block">Custom Landing Page (HTML)</label>
+                      <div 
+                        onClick={() => document.getElementById('html-upload')?.click()}
+                        className={`border-2 border-dashed rounded-sm p-3 text-center cursor-pointer transition-all ${newProduct.customHtml ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-[#f68b1e]'}`}
+                      >
+                        <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
+                        <span className="text-[10px] font-bold uppercase">{newProduct.customHtml ? '✅ HTML Loaded' : '📁 Upload .html'}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 block">Custom Styles (CSS)</label>
+                      <div 
+                        onClick={() => document.getElementById('css-upload')?.click()}
+                        className={`border-2 border-dashed rounded-sm p-3 text-center cursor-pointer transition-all ${newProduct.customCss ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-[#f68b1e]'}`}
+                      >
+                        <input id="css-upload" type="file" accept=".css" className="hidden" onChange={(e) => handleFileChange(e, 'css')} />
+                        <span className="text-[10px] font-bold uppercase">{newProduct.customCss ? '✅ CSS Loaded' : '📁 Upload .css'}</span>
+                      </div>
+                    </div>
                   </div>
                   
                   <div className="space-y-2">

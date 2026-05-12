@@ -72,6 +72,27 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     router.push("/checkout");
   };
 
+  if (product.customHtml) {
+    return (
+      <div className="min-h-screen bg-white overflow-x-hidden relative" dir="rtl">
+        {product.customCss && (
+          <style dangerouslySetInnerHTML={{ __html: product.customCss }} />
+        )}
+        <div dangerouslySetInnerHTML={{ __html: product.customHtml }} />
+        
+        {/* Floating Cart Button for Custom Landing Pages */}
+        <div className="fixed bottom-6 left-6 z-[9999] md:hidden">
+           <Button 
+            onClick={handleAddToCart}
+            className="h-14 w-14 rounded-full bg-[#f68b1e] text-white shadow-2xl flex items-center justify-center p-0"
+           >
+             <ShoppingCart className="h-6 w-6" />
+           </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen py-6 md:py-10" dir="rtl">
       <div className="container mx-auto px-4">

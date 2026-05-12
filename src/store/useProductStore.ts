@@ -12,6 +12,8 @@ export interface Product {
   badge?: string;
   stock: number;
   backgroundColor?: string;
+  customHtml?: string;
+  customCss?: string;
 }
 
 interface ProductState {
