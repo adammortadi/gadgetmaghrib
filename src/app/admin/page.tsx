@@ -271,11 +271,11 @@ export default function AdminDashboard() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
                           <span className="font-black text-[#282828] text-lg">{order.customerName}</span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${order.status === 'pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
-                            {order.status === 'pending' ? 'قيد الانتظار' : 'تم التوصيل'}
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${order.status === 'Pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
+                            {order.status === 'Pending' ? 'قيد الانتظار' : 'تم التوصيل'}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-500">{order.customerPhone} • {order.customerAddress}, {order.customerCity}</p>
+                        <p className="text-sm text-gray-500">{order.phone} • {order.address}, {order.city}</p>
                         <div className="flex gap-2 text-xs font-bold text-[#f68b1e] pt-2">
                           {order.items.map((item, i) => (
                             <span key={i} className="bg-orange-50 px-2 py-1 rounded-sm">{item.name} (x{item.quantity})</span>
