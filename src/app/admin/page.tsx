@@ -64,6 +64,7 @@ export default function AdminDashboard() {
 
   const [activeTab, setActiveTab] = useState<Tab>("inventory");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isCodeMode, setIsCodeMode] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -207,12 +208,26 @@ export default function AdminDashboard() {
                 <h1 className="text-3xl font-black text-[#282828]">مخزون المنتجات</h1>
                 <p className="text-gray-500 mt-1">إدارة السلع ديالك بكل سهولة.</p>
               </div>
-              <Button 
-                onClick={() => setIsAddModalOpen(true)}
-                className="bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-bold h-12 px-6 rounded-sm shadow-lg flex items-center gap-2"
-              >
-                <Plus className="h-5 w-5" /> إضافة منتج جديد
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => {
+                    setIsCodeMode(false);
+                    setIsAddModalOpen(true);
+                  }}
+                  className="bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-bold h-12 px-6 rounded-sm shadow-lg flex items-center gap-2"
+                >
+                  <Plus className="h-5 w-5" /> إضافة منتج
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setIsCodeMode(true);
+                    setIsAddModalOpen(true);
+                  }}
+                  className="bg-[#0a192f] hover:bg-[#1a293f] text-white font-bold h-12 px-6 rounded-sm shadow-lg flex items-center gap-2"
+                >
+                  <Palette className="h-5 w-5 text-[#00d2ff]" /> Add by Code 🚀
+                </Button>
+              </div>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -432,144 +447,151 @@ export default function AdminDashboard() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-sm p-8 w-full max-w-2xl relative z-10 jumia-shadow max-h-[90vh] overflow-y-auto"
+                className={`bg-white rounded-sm p-8 w-full ${isCodeMode ? 'max-w-4xl' : 'max-w-md'} relative z-10 jumia-shadow max-h-[90vh] overflow-y-auto`}
                 dir="rtl"
               >
                 <div className="flex justify-between items-center mb-8 sticky top-0 bg-white z-10 pb-4 border-b border-gray-50">
-                  <h2 className="text-2xl font-black text-[#282828]">إضافة منتج جديد</h2>
+                  <h2 className="text-2xl font-black text-[#282828]">
+                    {isCodeMode ? 'إضافة منتج بالكود (Landing Page)' : 'إضافة منتج عادي'}
+                  </h2>
                   <button onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors">
                     <X className="h-6 w-6" />
                   </button>
                 </div>
 
-                <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <form onSubmit={handleAddProduct} className="space-y-8">
                   
-                  {/* Basic Info Column */}
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">سمية المنتج</label>
-                      <Input 
-                        required
-                        value={newProduct.name}
-                        onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                        placeholder="مثال: مضرب كهربائي ذكي" 
-                        className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                         <label className="text-sm font-bold text-gray-500">الثمن (DH)</label>
-                         <Input 
-                          type="number" 
-                          value={newProduct.price}
-                          onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                          className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
-                         />
-                      </div>
-                      <div className="space-y-2">
-                         <label className="text-sm font-bold text-gray-500">الكمية</label>
-                         <Input 
-                          type="number" 
-                          value={newProduct.stock}
-                          onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
-                          className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
-                         />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-500">لون خلفية صفحة المنتج</label>
-                       <div className="flex gap-4">
-                          <input 
-                            type="color" 
-                            value={newProduct.backgroundColor}
-                            onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                            className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
-                          />
-                          <Input 
-                            value={newProduct.backgroundColor}
-                            onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                            className="w-32 h-12 text-center font-bold font-mono border-gray-100"
-                          />
-                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">تصاور المنتج</label>
-                      <div 
-                        onClick={() => document.getElementById('file-upload-admin')?.click()}
-                        className="border-2 border-dashed border-gray-100 rounded-sm p-6 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
-                      >
-                        <input id="file-upload-admin" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
-                          const files = Array.from(e.target.files || []);
-                          if (files.length > 0) {
-                            const readAsDataURL = (file: File) => new Promise<string>((resolve) => {
-                              const reader = new FileReader();
-                              reader.onloadend = () => resolve(reader.result as string);
-                              reader.readAsDataURL(file);
-                            });
-                            const base64Images = await Promise.all(files.map(readAsDataURL));
-                            setNewProduct(prev => ({ ...prev, image: prev.image || base64Images[0], images: [...prev.images, ...base64Images] }));
-                          }
-                        }}/>
-                        <ImageIcon className="h-10 w-10 text-gray-300 group-hover:text-[#f68b1e]" />
-                        <p className="text-[#282828] font-bold text-xs uppercase">إضافة التصاور</p>
-                      </div>
-                      {newProduct.images.length > 0 && (
-                        <div className="flex gap-2 overflow-x-auto py-2">
-                          {newProduct.images.map((img, idx) => (
-                            <div key={idx} className={`h-12 w-12 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
-                               <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
-                            </div>
-                          ))}
+                  {isCodeMode && (
+                    <div className="bg-[#0a192f] p-8 rounded-sm space-y-6 border-r-8 border-[#00d2ff] shadow-inner mb-8">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 bg-[#00d2ff] rounded-full flex items-center justify-center">
+                           <Palette className="h-6 w-6 text-[#0a192f]" />
                         </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Advanced Customization Column */}
-                  <div className="space-y-6">
-                    <div className="bg-gray-50 p-6 rounded-sm space-y-4">
-                      <h3 className="text-sm font-black text-[#0a192f] uppercase tracking-tighter border-b border-gray-200 pb-2">Custom Landing Page</h3>
+                        <h3 className="text-xl font-black text-white uppercase tracking-tighter">Custom Code Landing Page</h3>
+                      </div>
                       
-                      <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-gray-400 uppercase">HTML File (.html)</label>
+                          <label className="text-xs font-black text-[#00d2ff] uppercase">Drag HTML File Here</label>
                           <div 
                             onClick={() => document.getElementById('html-upload')?.click()}
-                            className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all flex flex-col items-center gap-2 ${newProduct.customHtml ? 'border-green-500 bg-green-100/50' : 'border-gray-200 hover:border-[#00d2ff] bg-white'}`}
+                            className={`border-2 border-dashed rounded-sm p-10 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customHtml ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
                           >
                             <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
-                            {newProduct.customHtml ? <CheckCircle className="h-8 w-8 text-green-500" /> : <Plus className="h-8 w-8 text-gray-200" />}
-                            <span className="text-xs font-bold uppercase">{newProduct.customHtml ? 'HTML Loaded Successfully!' : 'Drag or Click to Upload HTML'}</span>
+                            {newProduct.customHtml ? <CheckCircle className="h-10 w-10 text-green-500" /> : <Plus className="h-10 w-10 text-white/20" />}
+                            <span className="text-sm font-bold text-white/80">{newProduct.customHtml ? '✅ HTML LOADED!' : 'UPLOAD .HTML'}</span>
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-gray-400 uppercase">CSS File (.css)</label>
+                          <label className="text-xs font-black text-[#00d2ff] uppercase">Drag CSS File Here</label>
                           <div 
                             onClick={() => document.getElementById('css-upload')?.click()}
-                            className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all flex flex-col items-center gap-2 ${newProduct.customCss ? 'border-green-500 bg-green-100/50' : 'border-gray-200 hover:border-[#00d2ff] bg-white'}`}
+                            className={`border-2 border-dashed rounded-sm p-10 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customCss ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
                           >
                             <input id="css-upload" type="file" accept=".css" className="hidden" onChange={(e) => handleFileChange(e, 'css')} />
-                            {newProduct.customCss ? <CheckCircle className="h-8 w-8 text-green-500" /> : <Plus className="h-8 w-8 text-gray-200" />}
-                            <span className="text-xs font-bold uppercase">{newProduct.customCss ? 'CSS Loaded Successfully!' : 'Drag or Click to Upload CSS'}</span>
+                            {newProduct.customCss ? <CheckCircle className="h-10 w-10 text-green-500" /> : <Plus className="h-10 w-10 text-white/20" />}
+                            <span className="text-sm font-bold text-white/80">{newProduct.customCss ? '✅ CSS LOADED!' : 'UPLOAD .CSS'}</span>
                           </div>
                         </div>
                       </div>
+                      <p className="text-[10px] text-gray-400">Gemini can generate these files for you! Just upload them and voila! ✨</p>
+                    </div>
+                  )}
+
+                  <div className={`grid grid-cols-1 ${isCodeMode ? 'md:grid-cols-2' : ''} gap-8`}>
+                    {/* Column 1: Details */}
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">سمية المنتج</label>
+                        <Input 
+                          required
+                          value={newProduct.name}
+                          onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                          placeholder="مثال: مضرب كهربائي ذكي" 
+                          className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الثمن (DH)</label>
+                           <Input 
+                            type="number" 
+                            value={newProduct.price}
+                            onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                            className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الكمية</label>
+                           <Input 
+                            type="number" 
+                            value={newProduct.stock}
+                            onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                            className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                           />
+                        </div>
+                      </div>
                       
-                      <p className="text-[10px] text-gray-400 leading-tight">
-                        * Note: If you upload custom HTML/CSS, the default product layout will be hidden.
-                      </p>
+                      <div className="space-y-2">
+                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">لون الخلفية (اختياري)</label>
+                         <div className="flex gap-4">
+                            <input 
+                              type="color" 
+                              value={newProduct.backgroundColor}
+                              onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                              className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
+                            />
+                            <Input 
+                              value={newProduct.backgroundColor}
+                              onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                              className="w-32 h-12 text-center font-bold font-mono border-gray-100"
+                            />
+                         </div>
+                      </div>
                     </div>
 
-                    <div className="pt-4">
-                      <Button type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-lg">
-                        حفظ المنتج واللانينغ باج ⚡
-                      </Button>
+                    {/* Column 2: Images */}
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">تصاور المنتج (ضرورية للعرض)</label>
+                        <div 
+                          onClick={() => document.getElementById('file-upload-admin')?.click()}
+                          className="border-2 border-dashed border-gray-100 rounded-sm p-10 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
+                        >
+                          <input id="file-upload-admin" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
+                            const files = Array.from(e.target.files || []);
+                            if (files.length > 0) {
+                              const readAsDataURL = (file: File) => new Promise<string>((resolve) => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve(reader.result as string);
+                                reader.readAsDataURL(file);
+                              });
+                              const base64Images = await Promise.all(files.map(readAsDataURL));
+                              setNewProduct(prev => ({ ...prev, image: prev.image || base64Images[0], images: [...prev.images, ...base64Images] }));
+                            }
+                          }}/>
+                          <ImageIcon className="h-12 w-12 text-gray-200 group-hover:text-[#f68b1e]" />
+                          <p className="text-[#282828] font-black text-xs">إضافة التصاور</p>
+                        </div>
+                        {newProduct.images.length > 0 && (
+                          <div className="flex gap-2 overflow-x-auto py-2">
+                            {newProduct.images.map((img, idx) => (
+                              <div key={idx} className={`h-14 w-14 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
+                                 <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
+                  <div className="pt-4 sticky bottom-0 bg-white z-10 py-4 border-t border-gray-50">
+                    <Button type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-xl flex items-center justify-center gap-3">
+                      حفظ المنتج واللانينغ باج ⚡
+                    </Button>
+                  </div>
                 </form>
               </motion.div>
             </div>
