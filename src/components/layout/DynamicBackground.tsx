@@ -3,16 +3,22 @@
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { useEffect } from "react";
 
-export default function DynamicBackground({ children }: { children: React.ReactNode }) {
-  const { settings, fetchSettings } = useSettingsStore();
+export default function DynamicBackground({ 
+  children
+}: { 
+  children: React.ReactNode;
+}) {
+  const { settings, fetchSettings, currentBackgroundOverride } = useSettingsStore();
 
   useEffect(() => {
     fetchSettings();
   }, [fetchSettings]);
 
-  const bgStyle = settings.useBackgroundImage 
-    ? { backgroundImage: "url('/site-bg.png')" } 
-    : { backgroundColor: settings.backgroundColor };
+  const bgStyle = currentBackgroundOverride 
+    ? { backgroundColor: currentBackgroundOverride }
+    : settings.useBackgroundImage 
+      ? { backgroundImage: "url('/site-bg.png')" } 
+      : { backgroundColor: settings.backgroundColor };
 
   return (
     <div 

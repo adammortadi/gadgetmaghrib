@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import CountdownTimer from "@/components/product/CountdownTimer";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,9 +20,18 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   const [quantity, setQuantity] = useState(1);
   const { products } = useProductStore();
   const addItem = useCartStore((state) => state.addItem);
+  const setBackgroundOverride = useSettingsStore((state) => state.setBackgroundOverride);
 
   // Find the product dynamically
   const product = products.find(p => p.id === resolvedParams.id);
+
+  // Set per-product background color
+  useEffect(() => {
+    if (product?.backgroundColor) {
+      setBackgroundOverride(product.backgroundColor);
+    }
+    return () => setBackgroundOverride(null);
+  }, [product, setBackgroundOverride]);
 
   if (!product) {
     return (

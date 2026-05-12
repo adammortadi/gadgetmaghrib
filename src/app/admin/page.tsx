@@ -39,6 +39,24 @@ export default function AdminDashboard() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [newProduct, setNewProduct] = useState<{
+    name: string;
+    price: string;
+    image: string;
+    images: string[];
+    badge: string;
+    stock: string;
+    backgroundColor: string;
+  }>({
+    name: "",
+    price: "",
+    image: "",
+    images: [],
+    badge: "",
+    stock: "10",
+    backgroundColor: "#ffffff"
+  });
+
   const [activeTab, setActiveTab] = useState<Tab>("inventory");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -287,6 +305,23 @@ export default function AdminDashboard() {
                       onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
                       className="bg-gray-50 border-none focus-visible:ring-[#f68b1e]" 
                      />
+                  </div>
+                  
+                  <div className="space-y-2">
+                     <label className="text-sm font-bold text-gray-500">لون خلفية صفحة المنتج</label>
+                     <div className="flex gap-4">
+                        <input 
+                          type="color" 
+                          value={newProduct.backgroundColor}
+                          onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                          className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
+                        />
+                        <Input 
+                          value={newProduct.backgroundColor}
+                          onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                          className="w-32 h-12 text-center font-bold font-mono border-gray-100"
+                        />
+                     </div>
                   </div>
                   
                   <div className="space-y-2">

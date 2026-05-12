@@ -11,6 +11,7 @@ export interface Product {
   reviews: number;
   badge?: string;
   stock: number;
+  backgroundColor?: string;
 }
 
 interface ProductState {

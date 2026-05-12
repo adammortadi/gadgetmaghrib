@@ -13,9 +13,11 @@ interface SiteSettings {
 
 interface SettingsState {
   settings: SiteSettings;
+  currentBackgroundOverride: string | null;
   isLoading: boolean;
   fetchSettings: () => Promise<void>;
   updateSettings: (newSettings: Partial<SiteSettings>) => Promise<void>;
+  setBackgroundOverride: (color: string | null) => void;
 }
 
 const DEFAULT_SETTINGS: SiteSettings = {
@@ -31,7 +33,10 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
       settings: DEFAULT_SETTINGS,
+      currentBackgroundOverride: null,
       isLoading: true,
+
+      setBackgroundOverride: (color) => set({ currentBackgroundOverride: color }),
 
       fetchSettings: async () => {
         try {
