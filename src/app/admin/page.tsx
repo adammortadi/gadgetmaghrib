@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Package, 
@@ -35,9 +35,13 @@ type SiteSettingsUpdate = Partial<{
 }>;
 
 export default function AdminDashboard() {
-  const { products, addProduct, removeProduct } = useProductStore();
+  const { products, addProduct, removeProduct, fetchProducts } = useProductStore();
   const { orders, removeOrder } = useOrderStore();
   const { settings, updateSettings } = useSettingsStore();
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
   
   // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState(false);

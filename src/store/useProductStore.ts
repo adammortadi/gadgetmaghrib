@@ -25,9 +25,9 @@ interface ProductState {
   removeProduct: (id: string) => Promise<void>;
 }
 
-type ProductRecord = Omit<Product, 'backgroundColor' | 'customHtml' | 'customCss'>;
+type ProductRecord = Product;
 
-const PRODUCT_COLUMNS = 'id,name,price,image,images,rating,reviews,badge,stock,created_at';
+const PRODUCT_COLUMNS = 'id,name,price,image,images,rating,reviews,badge,stock,created_at,backgroundColor,customHtml,customCss';
 
 function toProductRecord(product: Product): ProductRecord {
   return {
@@ -41,6 +41,9 @@ function toProductRecord(product: Product): ProductRecord {
     badge: product.badge,
     stock: product.stock,
     created_at: product.created_at,
+    backgroundColor: product.backgroundColor,
+    customHtml: product.customHtml,
+    customCss: product.customCss,
   };
 }
 
