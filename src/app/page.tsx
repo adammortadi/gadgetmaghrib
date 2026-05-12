@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Package } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
+import CountdownTimer from "@/components/product/CountdownTimer";
 import { useProductStore } from "@/store/useProductStore";
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
         </div>
 
         {/* Banner Section */}
-        <div className="w-full rounded-sm overflow-hidden jumia-shadow mb-8 md:mb-12">
+        <div className="w-full rounded-sm overflow-hidden jumia-shadow mb-4">
           <Image 
             src="/banner.png" 
             alt="Gadget Maghrib Banner - أحدث الأدوات الإلكترونية بأسعار تنافسية" 
@@ -30,6 +31,14 @@ export default function Home() {
             className="w-full h-auto object-cover"
             priority
           />
+        </div>
+
+        {/* Urgent Offer Banner & Timer */}
+        <div className="mb-12">
+          <CountdownTimer />
+          <div className="bg-[#00d2ff] text-[#0a192f] text-center py-2 font-black uppercase tracking-widest text-xs rounded-b-sm animate-pulse">
+            عرض محدود جداً - سالي التايمر كيسالي العرض!
+          </div>
         </div>
 
         {/* Section Header */}

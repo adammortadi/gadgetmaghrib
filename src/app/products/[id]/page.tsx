@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
+import CountdownTimer from "@/components/product/CountdownTimer";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -154,6 +155,15 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-1">الضريبة مشمولة • توصيل سريع</p>
+              </div>
+
+              {/* Countdown Timer */}
+              <div className="mb-8">
+                <p className="text-sm font-black text-red-600 mb-2 animate-pulse flex items-center gap-2">
+                  <span className="h-2 w-2 bg-red-600 rounded-full"></span>
+                  همزة محدودة! ينتهي العرض في:
+                </p>
+                <CountdownTimer />
               </div>
 
               {/* Quantity Selector */}

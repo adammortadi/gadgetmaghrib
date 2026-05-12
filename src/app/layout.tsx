@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   }
 };
 
-import LayoutWrapper from "@/components/layout/LayoutWrapper";
+import DynamicBackground from "@/components/layout/DynamicBackground";
 
 export default function RootLayout({
   children,
@@ -24,13 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body 
-        className={`${inter.className} text-[#282828] antialiased min-h-screen flex flex-col bg-fixed bg-cover bg-center`}
-        style={{ backgroundImage: "url('/site-bg.png')" }}
-      >
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
+      <body className={`${inter.className} text-[#282828] antialiased`}>
+        <DynamicBackground>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+        </DynamicBackground>
         <Toaster />
       </body>
     </html>
