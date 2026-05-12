@@ -161,7 +161,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#f5f5f5] flex flex-col lg:flex-row border-4 border-red-500">
       
       {/* Sidebar */}
       <aside className="w-full lg:w-64 bg-white border-l border-gray-200 p-6 flex flex-col gap-8 jumia-shadow z-20" dir="rtl">
