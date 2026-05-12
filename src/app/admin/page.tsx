@@ -529,7 +529,6 @@ export default function AdminDashboard() {
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">سمية المنتج</label>
                         <Input 
-                          required
                           value={newProduct.name}
                           onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
                           placeholder="مثال: مضرب كهربائي ذكي" 
