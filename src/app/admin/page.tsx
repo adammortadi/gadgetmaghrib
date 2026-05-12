@@ -89,7 +89,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     if (isSavingProduct) return;
 
-    if (!newProduct.name || !newProduct.price || !newProduct.image) {
+    if (!isCodeMode && (!newProduct.name || !newProduct.price || !newProduct.image)) {
       toast.error("Please fill all fields and add a photo!");
       return;
     }
@@ -99,14 +99,14 @@ export default function AdminDashboard() {
     try {
       await addProduct({
         id: Math.random().toString(36).substr(2, 9),
-        name: newProduct.name,
-        price: Number(newProduct.price),
-        image: newProduct.image,
-        images: newProduct.images.length > 0 ? newProduct.images : [newProduct.image],
+        name: newProduct.name || "Custom Landing Page Product",
+        price: Number(newProduct.price) || 0,
+        image: newProduct.image || "/logo.png",
+        images: newProduct.images.length > 0 ? newProduct.images : (newProduct.image ? [newProduct.image] : ["/logo.png"]),
         rating: 5.0,
         reviews: 0,
         badge: newProduct.badge || undefined,
-        stock: Number(newProduct.stock),
+        stock: Number(newProduct.stock) || 10,
         backgroundColor: newProduct.backgroundColor,
         customHtml: newProduct.customHtml || undefined,
         customCss: newProduct.customCss || undefined
@@ -523,92 +523,94 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  <div className={`grid grid-cols-1 ${isCodeMode ? 'md:grid-cols-2' : ''} gap-8`}>
-                    {/* Column 1: Details */}
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">سمية المنتج</label>
-                        <Input 
-                          value={newProduct.name}
-                          onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                          placeholder="مثال: مضرب كهربائي ذكي" 
-                          className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
+                  {!isCodeMode && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Column 1: Details */}
+                      <div className="space-y-6">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الثمن (DH)</label>
-                           <Input 
-                            type="number" 
-                            value={newProduct.price}
-                            onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                            className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
-                           />
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">سمية المنتج</label>
+                          <Input 
+                            value={newProduct.name}
+                            onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                            placeholder="مثال: مضرب كهربائي ذكي" 
+                            className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
+                          />
                         </div>
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الكمية</label>
-                           <Input 
-                            type="number" 
-                            value={newProduct.stock}
-                            onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
-                            className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
-                           />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">لون الخلفية (اختياري)</label>
-                         <div className="flex gap-4">
-                            <input 
-                              type="color" 
-                              value={newProduct.backgroundColor}
-                              onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                              className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
-                            />
-                            <Input 
-                              value={newProduct.backgroundColor}
-                              onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                              className="w-32 h-12 text-center font-bold font-mono border-gray-100"
-                            />
-                         </div>
-                      </div>
-                    </div>
-
-                    {/* Column 2: Images */}
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">تصاور المنتج (ضرورية للعرض)</label>
-                        <div 
-                          onClick={() => document.getElementById('file-upload-admin')?.click()}
-                          className="border-2 border-dashed border-gray-100 rounded-sm p-10 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
-                        >
-                          <input id="file-upload-admin" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
-                            const files = Array.from(e.target.files || []);
-                            if (files.length > 0) {
-                              const readAsDataURL = (file: File) => new Promise<string>((resolve) => {
-                                const reader = new FileReader();
-                                reader.onloadend = () => resolve(reader.result as string);
-                                reader.readAsDataURL(file);
-                              });
-                              const base64Images = await Promise.all(files.map(readAsDataURL));
-                              setNewProduct(prev => ({ ...prev, image: prev.image || base64Images[0], images: [...prev.images, ...base64Images] }));
-                            }
-                          }}/>
-                          <ImageIcon className="h-12 w-12 text-gray-200 group-hover:text-[#f68b1e]" />
-                          <p className="text-[#282828] font-black text-xs">إضافة التصاور</p>
-                        </div>
-                        {newProduct.images.length > 0 && (
-                          <div className="flex gap-2 overflow-x-auto py-2">
-                            {newProduct.images.map((img, idx) => (
-                              <div key={idx} className={`h-14 w-14 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
-                                 <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
-                              </div>
-                            ))}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الثمن (DH)</label>
+                             <Input 
+                              type="number" 
+                              value={newProduct.price}
+                              onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                              className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                             />
                           </div>
-                        )}
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الكمية</label>
+                             <Input 
+                              type="number" 
+                              value={newProduct.stock}
+                              onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                              className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                             />
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">لون الخلفية (اختياري)</label>
+                           <div className="flex gap-4">
+                              <input 
+                                type="color" 
+                                value={newProduct.backgroundColor}
+                                onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                                className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
+                              />
+                              <Input 
+                                value={newProduct.backgroundColor}
+                                onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                                className="w-32 h-12 text-center font-bold font-mono border-gray-100"
+                              />
+                           </div>
+                        </div>
+                      </div>
+
+                      {/* Column 2: Images */}
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">تصاور المنتج (ضرورية للعرض)</label>
+                          <div 
+                            onClick={() => document.getElementById('file-upload-admin')?.click()}
+                            className="border-2 border-dashed border-gray-100 rounded-sm p-10 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
+                          >
+                            <input id="file-upload-admin" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
+                              const files = Array.from(e.target.files || []);
+                              if (files.length > 0) {
+                                const readAsDataURL = (file: File) => new Promise<string>((resolve) => {
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => resolve(reader.result as string);
+                                  reader.readAsDataURL(file);
+                                });
+                                const base64Images = await Promise.all(files.map(readAsDataURL));
+                                setNewProduct(prev => ({ ...prev, image: prev.image || base64Images[0], images: [...prev.images, ...base64Images] }));
+                              }
+                            }}/>
+                            <ImageIcon className="h-12 w-12 text-gray-200 group-hover:text-[#f68b1e]" />
+                            <p className="text-[#282828] font-black text-xs">إضافة التصاور</p>
+                          </div>
+                          {newProduct.images.length > 0 && (
+                            <div className="flex gap-2 overflow-x-auto py-2">
+                              {newProduct.images.map((img, idx) => (
+                                <div key={idx} className={`h-14 w-14 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
+                                   <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="pt-4 sticky bottom-0 bg-white z-10 py-4 border-t border-gray-50">
                     <Button disabled={isSavingProduct} type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-xl flex items-center justify-center gap-3">
