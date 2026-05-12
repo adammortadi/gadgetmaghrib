@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 import DynamicBackground from "@/components/layout/DynamicBackground";
+import LayoutWrapper from "@/components/layout/LayoutWrapper";
 
 export default function RootLayout({
   children,
@@ -26,10 +26,9 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${inter.className} text-[#282828] antialiased`}>
         <DynamicBackground>
-          <Navbar />
-          <main className="min-h-screen">
+          <LayoutWrapper>
             {children}
-          </main>
+          </LayoutWrapper>
         </DynamicBackground>
         <Toaster />
       </body>

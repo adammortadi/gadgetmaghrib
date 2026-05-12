@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  LayoutDashboard, 
   Package, 
   ShoppingCart, 
   X,
@@ -11,9 +10,6 @@ import {
   Trash2,
   Image as ImageIcon,
   ArrowRight,
-  TrendingUp,
-  DollarSign,
-  Users,
   Settings,
   Clock,
   Palette,
@@ -29,10 +25,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Tab = "dashboard" | "orders" | "inventory" | "settings";
+type SiteSettingsUpdate = Partial<{
+  backgroundColor: string;
+  useBackgroundImage: boolean;
+  timerHours: number;
+  timerMinutes: number;
+  timerSeconds: number;
+  showTimer: boolean;
+}>;
 
 export default function AdminDashboard() {
   const { products, addProduct, removeProduct } = useProductStore();
-  const { orders, updateOrderStatus, removeOrder } = useOrderStore();
+  const { orders, removeOrder } = useOrderStore();
   const { settings, updateSettings } = useSettingsStore();
   
   // Auth State
@@ -65,6 +69,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("inventory");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCodeMode, setIsCodeMode] = useState(false);
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,31 +81,46 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddProduct = (e: React.FormEvent) => {
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSavingProduct) return;
+
     if (!newProduct.name || !newProduct.price || !newProduct.image) {
       toast.error("Please fill all fields and add a photo!");
       return;
     }
 
-    addProduct({
-      id: Math.random().toString(36).substr(2, 9),
-      name: newProduct.name,
-      price: Number(newProduct.price),
-      image: newProduct.image,
-      images: newProduct.images.length > 0 ? newProduct.images : [newProduct.image],
-      rating: 5.0,
-      reviews: 0,
-      badge: newProduct.badge || undefined,
-      stock: Number(newProduct.stock),
-      backgroundColor: newProduct.backgroundColor,
-      customHtml: newProduct.customHtml || undefined,
-      customCss: newProduct.customCss || undefined
-    });
+    setIsSavingProduct(true);
 
-    toast.success("Product added successfully!");
-    setIsAddModalOpen(false);
-    setNewProduct({ name: "", price: "", image: "", images: [], badge: "", stock: "10", backgroundColor: "#ffffff", customHtml: "", customCss: "" });
+    try {
+      await addProduct({
+        id: Math.random().toString(36).substr(2, 9),
+        name: newProduct.name,
+        price: Number(newProduct.price),
+        image: newProduct.image,
+        images: newProduct.images.length > 0 ? newProduct.images : [newProduct.image],
+        rating: 5.0,
+        reviews: 0,
+        badge: newProduct.badge || undefined,
+        stock: Number(newProduct.stock),
+        backgroundColor: newProduct.backgroundColor,
+        customHtml: newProduct.customHtml || undefined,
+        customCss: newProduct.customCss || undefined
+      });
+
+      toast.success("Product added successfully!");
+      setIsAddModalOpen(false);
+      setNewProduct({ name: "", price: "", image: "", images: [], badge: "", stock: "10", backgroundColor: "#ffffff", customHtml: "", customCss: "" });
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === "object" && error && "message" in error
+          ? String((error as { message: unknown }).message)
+          : "Please check the product details and try again.";
+      toast.error(`Product could not be saved: ${message}`);
+    } finally {
+      setIsSavingProduct(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'html' | 'css') => {
@@ -116,7 +136,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleUpdateSettings = async (newSettings: any) => {
+  const handleUpdateSettings = async (newSettings: SiteSettingsUpdate) => {
     await updateSettings(newSettings);
     toast.success("تم تحديث الإعدادات بنجاح! ✨");
   };
@@ -588,8 +608,8 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="pt-4 sticky bottom-0 bg-white z-10 py-4 border-t border-gray-50">
-                    <Button type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-xl flex items-center justify-center gap-3">
-                      حفظ المنتج واللانينغ باج ⚡
+                    <Button disabled={isSavingProduct} type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-xl flex items-center justify-center gap-3">
+                      {isSavingProduct ? "Saving..." : "حفظ المنتج واللانينغ باج ⚡"}
                     </Button>
                   </div>
                 </form>

@@ -4,7 +4,7 @@ import React, { useState, use } from "react";
 import Image from "next/image";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Truck, Shield, Minus, Plus, ShoppingCart, CheckCircle, ChevronRight, ChevronLeft } from "lucide-react";
+import { Star, Truck, Minus, Plus, ShoppingCart, CheckCircle, ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -19,12 +19,15 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   const resolvedParams = use(params);
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
-  const { products } = useProductStore();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { products, isLoading } = useProductStore();
   const addItem = useCartStore((state) => state.addItem);
   const setBackgroundOverride = useSettingsStore((state) => state.setBackgroundOverride);
 
   // Find the product dynamically
   const product = products.find(p => p.id === resolvedParams.id);
+  const allImages = product ? [product.image, ...(product.images || []).filter(img => img !== product.image)] : [];
+  const selectedImageIndex = currentImageIndex < allImages.length ? currentImageIndex : 0;
 
   // Set per-product background color
   useEffect(() => {
@@ -33,6 +36,16 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     }
     return () => setBackgroundOverride(null);
   }, [product, setBackgroundOverride]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-[#282828] bg-white px-6 py-4 rounded-sm shadow-md">جاري التحميل...</h2>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -44,10 +57,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
       </div>
     );
   }
-
-  // Combine main image and additional images for the gallery
-  const allImages = product.images ? [product.image, ...product.images.filter(img => img !== product.image)] : [product.image];
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
@@ -106,7 +115,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               <div className="relative aspect-square bg-white border border-gray-100 rounded-sm overflow-hidden flex items-center justify-center group">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={currentImageIndex}
+                    key={selectedImageIndex}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.05 }}
@@ -114,7 +123,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     className="absolute inset-0"
                   >
                     <Image 
-                      src={allImages[currentImageIndex]} 
+                      src={allImages[selectedImageIndex]}
                       alt={product.name} 
                       fill 
                       className="object-contain p-4 md:p-8" 
@@ -154,7 +163,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     <button 
                       key={idx}
                       onClick={() => setCurrentImageIndex(idx)}
-                      className={`relative h-20 w-20 flex-shrink-0 rounded-sm overflow-hidden border-2 transition-all ${currentImageIndex === idx ? 'border-[#f68b1e] opacity-100' : 'border-gray-100 opacity-60 hover:opacity-100'}`}
+                      className={`relative h-20 w-20 flex-shrink-0 rounded-sm overflow-hidden border-2 transition-all ${selectedImageIndex === idx ? 'border-[#f68b1e] opacity-100' : 'border-gray-100 opacity-60 hover:opacity-100'}`}
                     >
                       <Image src={img} alt={`thumbnail ${idx}`} fill className="object-contain p-1" />
                     </button>
