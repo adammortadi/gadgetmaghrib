@@ -16,7 +16,8 @@ import {
   Users,
   Settings,
   Clock,
-  Palette
+  Palette,
+  CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -319,99 +320,75 @@ export default function AdminDashboard() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-sm p-8 w-full max-w-md relative z-10 jumia-shadow"
+                className="bg-white rounded-sm p-8 w-full max-w-2xl relative z-10 jumia-shadow max-h-[90vh] overflow-y-auto"
                 dir="rtl"
               >
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-black text-[#282828]">إضافة منتج</h2>
-                  <button onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500">
+                <div className="flex justify-between items-center mb-8 sticky top-0 bg-white z-10 pb-4 border-b border-gray-50">
+                  <h2 className="text-2xl font-black text-[#282828]">إضافة منتج جديد</h2>
+                  <button onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors">
                     <X className="h-6 w-6" />
                   </button>
                 </div>
 
-                <form onSubmit={handleAddProduct} className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">سمية المنتج</label>
-                    <Input 
-                      required
-                      value={newProduct.name}
-                      onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                      placeholder="مثال: مضرب كهربائي ذكي" 
-                      className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                     <label className="text-sm font-bold text-gray-500">الثمن (DH)</label>
-                     <Input 
-                      type="number" 
-                      value={newProduct.price}
-                      onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                      className="bg-gray-50 border-none focus-visible:ring-[#f68b1e]" 
-                     />
-                  </div>
-                  <div className="space-y-2">
-                     <label className="text-sm font-bold text-gray-500">الكمية فالمخزون</label>
-                     <Input 
-                      type="number" 
-                      value={newProduct.stock}
-                      onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
-                      className="bg-gray-50 border-none focus-visible:ring-[#f68b1e]" 
-                     />
-                  </div>
+                <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   
-                  <div className="space-y-2">
-                     <label className="text-sm font-bold text-gray-500">لون خلفية صفحة المنتج</label>
-                     <div className="flex gap-4">
-                        <input 
-                          type="color" 
-                          value={newProduct.backgroundColor}
-                          onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                          className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
-                        />
-                        <Input 
-                          value={newProduct.backgroundColor}
-                          onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
-                          className="w-32 h-12 text-center font-bold font-mono border-gray-100"
-                        />
-                     </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Basic Info Column */}
+                  <div className="space-y-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 block">Custom Landing Page (HTML)</label>
-                      <div 
-                        onClick={() => document.getElementById('html-upload')?.click()}
-                        className={`border-2 border-dashed rounded-sm p-3 text-center cursor-pointer transition-all ${newProduct.customHtml ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-[#f68b1e]'}`}
-                      >
-                        <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
-                        <span className="text-[10px] font-bold uppercase">{newProduct.customHtml ? '✅ HTML Loaded' : '📁 Upload .html'}</span>
+                      <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">سمية المنتج</label>
+                      <Input 
+                        required
+                        value={newProduct.name}
+                        onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                        placeholder="مثال: مضرب كهربائي ذكي" 
+                        className="bg-gray-50 border-gray-100 text-[#282828] h-12 text-right font-medium"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                         <label className="text-sm font-bold text-gray-500">الثمن (DH)</label>
+                         <Input 
+                          type="number" 
+                          value={newProduct.price}
+                          onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                          className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                         />
+                      </div>
+                      <div className="space-y-2">
+                         <label className="text-sm font-bold text-gray-500">الكمية</label>
+                         <Input 
+                          type="number" 
+                          value={newProduct.stock}
+                          onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                          className="bg-gray-50 border-none h-12 focus-visible:ring-[#f68b1e]" 
+                         />
                       </div>
                     </div>
+                    
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 block">Custom Styles (CSS)</label>
-                      <div 
-                        onClick={() => document.getElementById('css-upload')?.click()}
-                        className={`border-2 border-dashed rounded-sm p-3 text-center cursor-pointer transition-all ${newProduct.customCss ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-[#f68b1e]'}`}
-                      >
-                        <input id="css-upload" type="file" accept=".css" className="hidden" onChange={(e) => handleFileChange(e, 'css')} />
-                        <span className="text-[10px] font-bold uppercase">{newProduct.customCss ? '✅ CSS Loaded' : '📁 Upload .css'}</span>
-                      </div>
+                       <label className="text-sm font-bold text-gray-500">لون خلفية صفحة المنتج</label>
+                       <div className="flex gap-4">
+                          <input 
+                            type="color" 
+                            value={newProduct.backgroundColor}
+                            onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                            className="h-12 w-full rounded-sm cursor-pointer border border-gray-100"
+                          />
+                          <Input 
+                            value={newProduct.backgroundColor}
+                            onChange={(e) => setNewProduct({...newProduct, backgroundColor: e.target.value})}
+                            className="w-32 h-12 text-center font-bold font-mono border-gray-100"
+                          />
+                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">تصاور المنتج (تقدر تزيد بزاف)</label>
-                    <div 
-                      onClick={() => document.getElementById('file-upload-admin')?.click()}
-                      className="border-2 border-dashed border-gray-100 rounded-sm p-6 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
-                    >
-                      <input 
-                        id="file-upload-admin"
-                        type="file" 
-                        accept="image/*" 
-                        multiple
-                        className="hidden" 
-                        onChange={async (e) => {
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-400 uppercase tracking-widest text-[10px]">تصاور المنتج</label>
+                      <div 
+                        onClick={() => document.getElementById('file-upload-admin')?.click()}
+                        className="border-2 border-dashed border-gray-100 rounded-sm p-6 flex flex-col items-center justify-center gap-4 hover:border-[#f68b1e] hover:bg-orange-50/20 transition-all cursor-pointer group"
+                      >
+                        <input id="file-upload-admin" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
                           const files = Array.from(e.target.files || []);
                           if (files.length > 0) {
                             const readAsDataURL = (file: File) => new Promise<string>((resolve) => {
@@ -419,39 +396,68 @@ export default function AdminDashboard() {
                               reader.onloadend = () => resolve(reader.result as string);
                               reader.readAsDataURL(file);
                             });
-                            
                             const base64Images = await Promise.all(files.map(readAsDataURL));
-                            
-                            setNewProduct(prev => ({ 
-                              ...prev, 
-                              image: prev.image || base64Images[0], 
-                              images: [...prev.images, ...base64Images]
-                            }));
+                            setNewProduct(prev => ({ ...prev, image: prev.image || base64Images[0], images: [...prev.images, ...base64Images] }));
                           }
-                        }}
-                      />
-                      <ImageIcon className="h-10 w-10 text-gray-300 group-hover:text-[#f68b1e]" />
-                      <div className="text-center">
-                        <p className="text-[#282828] font-bold text-xs uppercase">إضغط هنا لإضافة التصاور</p>
+                        }}/>
+                        <ImageIcon className="h-10 w-10 text-gray-300 group-hover:text-[#f68b1e]" />
+                        <p className="text-[#282828] font-bold text-xs uppercase">إضافة التصاور</p>
                       </div>
+                      {newProduct.images.length > 0 && (
+                        <div className="flex gap-2 overflow-x-auto py-2">
+                          {newProduct.images.map((img, idx) => (
+                            <div key={idx} className={`h-12 w-12 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
+                               <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    {/* Image Previews */}
-                    {newProduct.images.length > 0 && (
-                      <div className="flex gap-2 overflow-x-auto py-2">
-                        {newProduct.images.map((img, idx) => (
-                          <div key={idx} className={`h-16 w-16 flex-shrink-0 relative rounded-sm overflow-hidden border-2 ${img === newProduct.image ? 'border-[#f68b1e]' : 'border-gray-200'}`}>
-                             <Image src={img} alt={`preview ${idx}`} fill className="object-cover" />
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
-                  <div className="pt-4">
-                    <Button type="submit" className="w-full h-14 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-lg rounded-sm shadow-lg">
-                      حفظ المنتج ⚡
-                    </Button>
+                  {/* Advanced Customization Column */}
+                  <div className="space-y-6">
+                    <div className="bg-gray-50 p-6 rounded-sm space-y-4">
+                      <h3 className="text-sm font-black text-[#0a192f] uppercase tracking-tighter border-b border-gray-200 pb-2">Custom Landing Page</h3>
+                      
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-gray-400 uppercase">HTML File (.html)</label>
+                          <div 
+                            onClick={() => document.getElementById('html-upload')?.click()}
+                            className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all flex flex-col items-center gap-2 ${newProduct.customHtml ? 'border-green-500 bg-green-100/50' : 'border-gray-200 hover:border-[#00d2ff] bg-white'}`}
+                          >
+                            <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
+                            {newProduct.customHtml ? <CheckCircle className="h-8 w-8 text-green-500" /> : <Plus className="h-8 w-8 text-gray-200" />}
+                            <span className="text-xs font-bold uppercase">{newProduct.customHtml ? 'HTML Loaded Successfully!' : 'Drag or Click to Upload HTML'}</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-gray-400 uppercase">CSS File (.css)</label>
+                          <div 
+                            onClick={() => document.getElementById('css-upload')?.click()}
+                            className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all flex flex-col items-center gap-2 ${newProduct.customCss ? 'border-green-500 bg-green-100/50' : 'border-gray-200 hover:border-[#00d2ff] bg-white'}`}
+                          >
+                            <input id="css-upload" type="file" accept=".css" className="hidden" onChange={(e) => handleFileChange(e, 'css')} />
+                            {newProduct.customCss ? <CheckCircle className="h-8 w-8 text-green-500" /> : <Plus className="h-8 w-8 text-gray-200" />}
+                            <span className="text-xs font-bold uppercase">{newProduct.customCss ? 'CSS Loaded Successfully!' : 'Drag or Click to Upload CSS'}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <p className="text-[10px] text-gray-400 leading-tight">
+                        * Note: If you upload custom HTML/CSS, the default product layout will be hidden.
+                      </p>
+                    </div>
+
+                    <div className="pt-4">
+                      <Button type="submit" className="w-full h-16 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-xl rounded-sm shadow-lg">
+                        حفظ المنتج واللانينغ باج ⚡
+                      </Button>
+                    </div>
                   </div>
+
                 </form>
               </motion.div>
             </div>
