@@ -120,7 +120,44 @@ export default function AdminDashboard() {
     toast.success("تم تحديث الإعدادات بنجاح! ✨");
   };
 
-  // ... (keeping Auth check if block)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0a192f] flex items-center justify-center p-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white p-8 rounded-sm jumia-shadow w-full max-w-md space-y-8"
+        >
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-black text-[#282828]">دخول الإدارة</h1>
+            <p className="text-gray-500">مرحبا بك آدم، دخل المعلومات باش تكمل.</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-6" dir="rtl">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-500">اسم المستخدم</label>
+              <Input 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="h-12 border-gray-100" 
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-500">كلمة المرور</label>
+              <Input 
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-12 border-gray-100" 
+              />
+            </div>
+            <Button type="submit" className="w-full h-12 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-bold text-lg">
+              دخول ⚡
+            </Button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f5f5] flex flex-col lg:flex-row">
@@ -163,7 +200,97 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <main className="flex-1 p-6 lg:p-10" dir="rtl">
         
-        {/* ... (keeping existing Tab content for dashboard, inventory, orders) */}
+        {activeTab === "inventory" && (
+          <div className="space-y-8">
+            <header className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-black text-[#282828]">مخزون المنتجات</h1>
+                <p className="text-gray-500 mt-1">إدارة السلع ديالك بكل سهولة.</p>
+              </div>
+              <Button 
+                onClick={() => setIsAddModalOpen(true)}
+                className="bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-bold h-12 px-6 rounded-sm shadow-lg flex items-center gap-2"
+              >
+                <Plus className="h-5 w-5" /> إضافة منتج جديد
+              </Button>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <div key={product.id} className="bg-white rounded-sm jumia-shadow overflow-hidden group">
+                  <div className="relative aspect-square">
+                    <Image src={product.image} alt={product.name} fill className="object-cover" />
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-sm text-xs font-black text-[#282828] shadow-sm">
+                      {product.price} DH
+                    </div>
+                  </div>
+                  <div className="p-4 flex justify-between items-center bg-white">
+                    <div>
+                      <h3 className="font-bold text-[#282828] line-clamp-1">{product.name}</h3>
+                      <p className="text-xs text-gray-400 mt-1">المخزون: {product.stock}</p>
+                    </div>
+                    <button 
+                      onClick={() => removeProduct(product.id)}
+                      className="text-gray-300 hover:text-red-500 transition-colors p-2"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "orders" && (
+           <div className="space-y-8">
+             <header>
+                <h1 className="text-3xl font-black text-[#282828]">طلبات الزبناء</h1>
+                <p className="text-gray-500 mt-1">تتبع كاع الطلبيات لي وصلوك.</p>
+             </header>
+             
+             {orders.length > 0 ? (
+               <div className="grid grid-cols-1 gap-6">
+                  {orders.map((order) => (
+                    <div key={order.id} className="bg-white p-6 rounded-sm jumia-shadow border-r-4 border-[#f68b1e] flex flex-col md:flex-row justify-between gap-6">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <span className="font-black text-[#282828] text-lg">{order.customerName}</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${order.status === 'pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
+                            {order.status === 'pending' ? 'قيد الانتظار' : 'تم التوصيل'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-500">{order.customerPhone} • {order.customerAddress}, {order.customerCity}</p>
+                        <div className="flex gap-2 text-xs font-bold text-[#f68b1e] pt-2">
+                          {order.items.map((item, i) => (
+                            <span key={i} className="bg-orange-50 px-2 py-1 rounded-sm">{item.name} (x{item.quantity})</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 border-t md:border-t-0 md:border-r border-gray-100 pt-4 md:pt-0 md:pr-6">
+                        <div className="text-left md:text-right">
+                          <p className="text-xs text-gray-400">المجموع</p>
+                          <p className="text-xl font-black text-[#282828]">{order.total} DH</p>
+                        </div>
+                        <button 
+                          onClick={() => removeOrder(order.id)}
+                          className="bg-gray-50 hover:bg-red-50 text-gray-300 hover:text-red-500 p-3 rounded-sm transition-all"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+               </div>
+             ) : (
+               <div className="bg-white rounded-sm jumia-shadow p-20 text-center">
+                 <ShoppingCart className="h-20 w-20 text-gray-100 mx-auto mb-6" />
+                 <h2 className="text-2xl font-bold text-[#282828]">ماكاين حتى طلب دابا</h2>
+                 <p className="text-gray-400 mt-2">الطلبات لي غادي يوصلوك غادي يبانو هنا.</p>
+               </div>
+             )}
+           </div>
+        )}
 
         {activeTab === "settings" && (
           <div className="max-w-4xl space-y-10">
@@ -288,21 +415,6 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* ... (rest of the file remains same) */}
-      </main>
-    </div>
-  );
-}</div>
-              ) : (
-                <div className="bg-white rounded-sm jumia-shadow p-20 text-center">
-                  <ShoppingCart className="h-20 w-20 text-gray-100 mx-auto mb-6" />
-                  <h2 className="text-2xl font-bold text-[#282828]">ماكاين حتى طلب دابا</h2>
-                  <p className="text-gray-400 mt-2">الطلبات لي غادي يوصلوك غادي يبانو هنا.</p>
-                </div>
-              )}
-           </div>
         )}
 
         {/* Add Product Modal */}
