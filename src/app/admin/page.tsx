@@ -494,28 +494,16 @@ export default function AdminDashboard() {
                         <h3 className="text-xl font-black text-white uppercase tracking-tighter">Custom Code Landing Page</h3>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 gap-6">
                         <div className="space-y-2">
-                          <label className="text-xs font-black text-[#00d2ff] uppercase">Drag HTML File Here</label>
+                          <label className="text-xs font-black text-[#00d2ff] uppercase">Drag Code File Here (HTML + CSS Combined)</label>
                           <div 
                             onClick={() => document.getElementById('html-upload')?.click()}
-                            className={`border-2 border-dashed rounded-sm p-10 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customHtml ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
+                            className={`border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customHtml ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
                           >
                             <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
-                            {newProduct.customHtml ? <CheckCircle className="h-10 w-10 text-green-500" /> : <Plus className="h-10 w-10 text-white/20" />}
-                            <span className="text-sm font-bold text-white/80">{newProduct.customHtml ? '✅ HTML LOADED!' : 'UPLOAD .HTML'}</span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-xs font-black text-[#00d2ff] uppercase">Drag CSS File Here</label>
-                          <div 
-                            onClick={() => document.getElementById('css-upload')?.click()}
-                            className={`border-2 border-dashed rounded-sm p-10 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customCss ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
-                          >
-                            <input id="css-upload" type="file" accept=".css" className="hidden" onChange={(e) => handleFileChange(e, 'css')} />
-                            {newProduct.customCss ? <CheckCircle className="h-10 w-10 text-green-500" /> : <Plus className="h-10 w-10 text-white/20" />}
-                            <span className="text-sm font-bold text-white/80">{newProduct.customCss ? '✅ CSS LOADED!' : 'UPLOAD .CSS'}</span>
+                            {newProduct.customHtml ? <CheckCircle className="h-12 w-12 text-green-500" /> : <Plus className="h-12 w-12 text-white/20" />}
+                            <span className="text-base font-bold text-white/80">{newProduct.customHtml ? '✅ CODE LOADED SUCCESSFULLY!' : 'UPLOAD COMPILED CODE (.HTML)'}</span>
                           </div>
                         </div>
                       </div>
