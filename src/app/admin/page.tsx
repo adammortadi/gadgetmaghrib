@@ -494,16 +494,45 @@ export default function AdminDashboard() {
                         <h3 className="text-xl font-black text-white uppercase tracking-tighter">Custom Code Landing Page</h3>
                       </div>
                       
-                      <div className="grid grid-cols-1 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label className="text-xs font-black text-[#00d2ff] uppercase">Drag Code File Here (HTML + CSS Combined)</label>
                           <div 
                             onClick={() => document.getElementById('html-upload')?.click()}
-                            className={`border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-all flex flex-col items-center gap-3 ${newProduct.customHtml ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
+                            className={`border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 h-full ${newProduct.customHtml ? 'border-green-500 bg-green-500/10' : 'border-white/20 hover:border-[#00d2ff] bg-white/5'}`}
                           >
                             <input id="html-upload" type="file" accept=".html" className="hidden" onChange={(e) => handleFileChange(e, 'html')} />
                             {newProduct.customHtml ? <CheckCircle className="h-12 w-12 text-green-500" /> : <Plus className="h-12 w-12 text-white/20" />}
                             <span className="text-base font-bold text-white/80">{newProduct.customHtml ? '✅ CODE LOADED SUCCESSFULLY!' : 'UPLOAD COMPILED CODE (.HTML)'}</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-black text-[#00d2ff] uppercase">Article Image (Storefront Thumbnail)</label>
+                          <div 
+                            onClick={() => document.getElementById('code-image-upload')?.click()}
+                            className={`border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 relative overflow-hidden h-full ${newProduct.image ? 'border-[#f68b1e] bg-[#f68b1e]/10' : 'border-white/20 hover:border-[#f68b1e] bg-white/5'}`}
+                          >
+                            <input id="code-image-upload" type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onloadend = () => setNewProduct(prev => ({ ...prev, image: reader.result as string, images: [reader.result as string] }));
+                                reader.readAsDataURL(file);
+                              }
+                            }}/>
+                            {newProduct.image ? (
+                              <>
+                                <Image src={newProduct.image} alt="Thumbnail" fill className="object-contain p-4 opacity-50" />
+                                <CheckCircle className="h-12 w-12 text-[#f68b1e] relative z-10" />
+                                <span className="text-base font-bold text-[#f68b1e] relative z-10">✅ IMAGE LOADED!</span>
+                              </>
+                            ) : (
+                              <>
+                                <ImageIcon className="h-12 w-12 text-white/20" />
+                                <span className="text-base font-bold text-white/80">UPLOAD THUMBNAIL IMAGE</span>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
