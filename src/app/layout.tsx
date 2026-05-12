@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Gadget Maghrib | متجرك الإلكتروني المفضل في المغرب",
   description: "اكتشف أفضل الساعات الذكية، السماعات، وإكسسوارات الهواتف في المغرب. جودة مضمونة، توصيل سريع، ودفع عند الاستلام مع Gadget Maghrib.",
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.svg",
     apple: "/logo.png",
   }
 };
