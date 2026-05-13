@@ -1,6 +1,6 @@
 "use client";
-
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import React from "react";
+import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -8,98 +8,94 @@ import { toast } from "sonner";
 export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Message sent successfully. We'll get back to you soon!");
+    toast.success("تم إرسال رسالتك بنجاح! غادي نجاوبوك فدقيقة.");
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-6xl">
+    <div className="container mx-auto px-4 py-16 max-w-6xl" dir="rtl">
       <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Contact Us</h1>
+        <h1 className="text-4xl md:text-5xl font-black text-white mb-6">تواصل معانا</h1>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-          Have a question or need assistance? Our support team is here to help you with any inquiries regarding our products or your orders.
+          عندك شي سؤال أو محتاج مساعدة؟ فريق الدعم ديالنا هنا باش يجاوبك على كاع الاستفسارات ديالك بخصوص المنتجات أو الطلبيات.
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12">
         {/* Contact Info */}
         <div className="space-y-8">
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 flex items-start gap-6">
-            <div className="h-14 w-14 bg-[#ff9800]/10 rounded-2xl flex items-center justify-center shrink-0">
-              <MapPin className="h-6 w-6 text-[#ff9800]" />
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-8 flex items-start gap-6 jumia-shadow">
+            <div className="h-14 w-14 bg-[#f68b1e]/10 rounded-sm flex items-center justify-center shrink-0">
+              <MapPin className="h-6 w-6 text-[#f68b1e]" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white mb-2">Our Store</h3>
+              <h3 className="text-xl font-bold text-white mb-2">المقر ديالنا</h3>
               <p className="text-gray-400 leading-relaxed">
-                123 Tech Avenue, Maarif<br />
-                Casablanca, Morocco<br />
+                حي المعاريف، شارع التكنولوجيا<br />
+                الدار البيضاء، المغرب<br />
                 20000
               </p>
             </div>
           </div>
 
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 flex items-start gap-6">
-            <div className="h-14 w-14 bg-[#ff9800]/10 rounded-2xl flex items-center justify-center shrink-0">
-              <Phone className="h-6 w-6 text-[#ff9800]" />
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-8 flex items-start gap-6 jumia-shadow">
+            <div className="h-14 w-14 bg-[#f68b1e]/10 rounded-sm flex items-center justify-center shrink-0">
+              <Phone className="h-6 w-6 text-[#f68b1e]" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white mb-2">Phone & Email</h3>
-              <p className="text-gray-400 leading-relaxed mb-1">+212 600 000 000</p>
-              <p className="text-[#ff9800]">support@gadgetmghrib.com</p>
+              <h3 className="text-xl font-bold text-white mb-2">الهاتف والبريد</h3>
+              <p className="text-gray-400 leading-relaxed mb-1">+212 635-734244</p>
+              <p className="text-[#f68b1e]">support@gadgetmghrib.com</p>
             </div>
           </div>
 
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 flex items-start gap-6">
-            <div className="h-14 w-14 bg-[#ff9800]/10 rounded-2xl flex items-center justify-center shrink-0">
-              <Clock className="h-6 w-6 text-[#ff9800]" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">Business Hours</h3>
-              <p className="text-gray-400 leading-relaxed">
-                Monday - Friday: 9:00 AM - 8:00 PM<br />
-                Saturday: 10:00 AM - 6:00 PM<br />
-                Sunday: Closed
-              </p>
-            </div>
+          <div className="bg-[#f68b1e] rounded-sm p-8 flex items-center justify-between text-[#0a192f] jumia-shadow group cursor-pointer">
+             <div className="space-y-1">
+                <h3 className="text-xl font-black">دعم فوري عبر الواتساب</h3>
+                <p className="text-sm font-bold opacity-80">نجاوبوك فقل من 5 دقائق ⚡</p>
+             </div>
+             <a href="https://wa.me/212635734244" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="h-10 w-10 fill-[#0a192f] group-hover:scale-110 transition-transform" />
+             </a>
           </div>
         </div>
 
         {/* Contact Form */}
-        <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 md:p-12">
-          <h2 className="text-2xl font-bold text-white mb-8">Send us a Message</h2>
+        <div className="bg-white rounded-sm p-8 md:p-12 jumia-shadow">
+          <h2 className="text-2xl font-bold text-[#282828] mb-8">صيفط لينا رسالة</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-400">First Name</label>
-                <Input required placeholder="Youssef" className="h-12 bg-white/5 border-white/10 text-white focus-visible:ring-[#ff9800] rounded-xl" />
+              <div className="space-y-2 text-right">
+                <label className="text-sm font-bold text-gray-400">الاسم الشخصي</label>
+                <Input required placeholder="مثال: يوسف" className="h-12 border-gray-100 text-[#282828] focus-visible:ring-[#f68b1e] text-right" />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-400">Last Name</label>
-                <Input required placeholder="Alaoui" className="h-12 bg-white/5 border-white/10 text-white focus-visible:ring-[#ff9800] rounded-xl" />
+              <div className="space-y-2 text-right">
+                <label className="text-sm font-bold text-gray-400">الاسم العائلي</label>
+                <Input required placeholder="مثال: العلوي" className="h-12 border-gray-100 text-[#282828] focus-visible:ring-[#f68b1e] text-right" />
               </div>
             </div>
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400">Email Address</label>
-              <Input required type="email" placeholder="youssef@example.com" className="h-12 bg-white/5 border-white/10 text-white focus-visible:ring-[#ff9800] rounded-xl" />
+            <div className="space-y-2 text-right">
+              <label className="text-sm font-bold text-gray-400">البريد الإلكتروني</label>
+              <Input required type="email" placeholder="youssef@example.com" className="h-12 border-gray-100 text-[#282828] focus-visible:ring-[#f68b1e] text-right" />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400">Subject</label>
-              <Input required placeholder="How can we help you?" className="h-12 bg-white/5 border-white/10 text-white focus-visible:ring-[#ff9800] rounded-xl" />
+            <div className="space-y-2 text-right">
+              <label className="text-sm font-bold text-gray-400">الموضوع</label>
+              <Input required placeholder="شنو بغيتي تعرف؟" className="h-12 border-gray-100 text-[#282828] focus-visible:ring-[#f68b1e] text-right" />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400">Message</label>
+            <div className="space-y-2 text-right">
+              <label className="text-sm font-bold text-gray-400">الرسالة</label>
               <textarea 
                 required 
                 rows={5} 
-                placeholder="Type your message here..." 
-                className="w-full p-4 bg-white/5 border border-white/10 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9800] rounded-xl resize-none"
+                placeholder="كتب الرسالة ديالك هنا..." 
+                className="w-full p-4 border border-gray-100 text-[#282828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f68b1e] rounded-sm resize-none text-right"
               ></textarea>
             </div>
 
-            <Button type="submit" className="w-full h-14 bg-[#ff9800] hover:bg-[#e65100] text-black font-bold text-lg rounded-xl transition-all">
-              Send Message
+            <Button type="submit" className="w-full h-14 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-lg rounded-sm transition-all shadow-lg">
+              صيفط الرسالة دابا
             </Button>
           </form>
         </div>
