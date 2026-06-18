@@ -74,6 +74,7 @@ export default function AdminDashboard() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCodeMode, setIsCodeMode] = useState(false);
   const [isSavingProduct, setIsSavingProduct] = useState(false);
+  const [uploadedAssets, setUploadedAssets] = useState<{ name: string; base64: string }[]>([]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,6 +98,35 @@ export default function AdminDashboard() {
     setIsSavingProduct(true);
 
     try {
+      let finalHtml = newProduct.customHtml;
+      let finalCss = newProduct.customCss;
+
+      if (isCodeMode && uploadedAssets.length > 0) {
+        uploadedAssets.forEach(asset => {
+          const escapedName = asset.name.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+          
+          // Match src="..." or href="..."
+          const doubleQuoteRegex = new RegExp(`(src|href)="([^"]*\\/)?${escapedName}"`, 'g');
+          finalHtml = finalHtml.replace(doubleQuoteRegex, `$1="${asset.base64}"`);
+          
+          const singleQuoteRegex = new RegExp(`(src|href)='([^']*\\/)?${escapedName}'`, 'g');
+          finalHtml = finalHtml.replace(singleQuoteRegex, `$1='${asset.base64}'`);
+          
+          // Match url(...) in CSS
+          const doubleQuoteUrlRegex = new RegExp(`url\\("([^"]*\\/)?${escapedName}"\\)`, 'g');
+          finalHtml = finalHtml.replace(doubleQuoteUrlRegex, `url("${asset.base64}")`);
+          if (finalCss) finalCss = finalCss.replace(doubleQuoteUrlRegex, `url("${asset.base64}")`);
+
+          const singleQuoteUrlRegex = new RegExp(`url\\('([^']*\\/)?${escapedName}'\\)`, 'g');
+          finalHtml = finalHtml.replace(singleQuoteUrlRegex, `url('${asset.base64}')`);
+          if (finalCss) finalCss = finalCss.replace(singleQuoteUrlRegex, `url('${asset.base64}')`);
+
+          const noQuoteUrlRegex = new RegExp(`url\\(([^)]*\\/)?${escapedName}\\)`, 'g');
+          finalHtml = finalHtml.replace(noQuoteUrlRegex, `url(${asset.base64})`);
+          if (finalCss) finalCss = finalCss.replace(noQuoteUrlRegex, `url(${asset.base64})`);
+        });
+      }
+
       await addProduct({
         id: Math.random().toString(36).substr(2, 9),
         name: newProduct.name || "Custom Landing Page Product",
@@ -108,13 +138,14 @@ export default function AdminDashboard() {
         badge: newProduct.badge || undefined,
         stock: Number(newProduct.stock) || 10,
         backgroundColor: newProduct.backgroundColor,
-        customHtml: newProduct.customHtml || undefined,
-        customCss: newProduct.customCss || undefined
+        customHtml: finalHtml || undefined,
+        customCss: finalCss || undefined
       });
 
       toast.success("Product added successfully!");
       setIsAddModalOpen(false);
       setNewProduct({ name: "", price: "", image: "", images: [], badge: "", stock: "10", backgroundColor: "#ffffff", customHtml: "", customCss: "" });
+      setUploadedAssets([]);
     } catch (error) {
       const message = error instanceof Error
         ? error.message
@@ -464,7 +495,7 @@ export default function AdminDashboard() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => setIsAddModalOpen(false)}
+                onClick={() => { setIsAddModalOpen(false); setUploadedAssets([]); }}
                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
               />
               <motion.div 
@@ -478,7 +509,7 @@ export default function AdminDashboard() {
                   <h2 className="text-2xl font-black text-[#282828]">
                     {isCodeMode ? 'إضافة منتج بالكود (Landing Page)' : 'إضافة منتج عادي'}
                   </h2>
-                  <button onClick={() => setIsAddModalOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors">
+                  <button onClick={() => { setIsAddModalOpen(false); setUploadedAssets([]); }} className="text-gray-400 hover:text-red-500 transition-colors">
                     <X className="h-6 w-6" />
                   </button>
                 </div>
@@ -536,6 +567,51 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       </div>
+                      
+                      {/* Landing Page Assets Upload */}
+                      <div className="space-y-2 mt-6">
+                        <label className="text-xs font-black text-[#00d2ff] uppercase">Upload Images/Assets Used in HTML (Select Multiple)</label>
+                        <div 
+                          onClick={() => document.getElementById('assets-upload')?.click()}
+                          className={`border-2 border-dashed rounded-sm p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2 bg-white/5 border-white/20 hover:border-[#00d2ff]`}
+                        >
+                          <input id="assets-upload" type="file" accept="image/*" multiple className="hidden" onChange={async (e) => {
+                            const files = Array.from(e.target.files || []);
+                            if (files.length > 0) {
+                              const readAsDataURL = (file: File) => new Promise<{ name: string; base64: string }>((resolve) => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve({ name: file.name, base64: reader.result as string });
+                                reader.readAsDataURL(file);
+                              });
+                              const loaded = await Promise.all(files.map(readAsDataURL));
+                              setUploadedAssets(prev => [...prev, ...loaded]);
+                              toast.success(`Loaded ${loaded.length} image assets!`);
+                            }
+                          }}/>
+                          <ImageIcon className="h-8 w-8 text-white/40" />
+                          <span className="text-sm font-bold text-white/85">Click to select all local images used in your HTML code</span>
+                        </div>
+                        {uploadedAssets.length > 0 && (
+                          <div className="flex flex-wrap gap-2 py-2 max-h-32 overflow-y-auto bg-white/5 p-3 rounded-sm">
+                            {uploadedAssets.map((asset, idx) => (
+                              <div key={idx} className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full text-xs font-bold text-white">
+                                <span className="max-w-[150px] truncate">{asset.name}</span>
+                                <button 
+                                  type="button" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setUploadedAssets(prev => prev.filter((_, i) => i !== idx));
+                                  }}
+                                  className="text-red-400 hover:text-red-500 font-extrabold"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
                       <p className="text-[10px] text-gray-400">Gemini can generate these files for you! Just upload them and voila! ✨</p>
                     </div>
                   )}
