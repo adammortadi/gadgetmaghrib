@@ -12,18 +12,18 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-6xl" dir="rtl">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-black text-white mb-6">تواصل معانا</h1>
-        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+    <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 max-w-6xl" dir="rtl">
+      <div className="text-center mb-8 sm:mb-16">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6">تواصل معانا</h1>
+        <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
           عندك شي سؤال أو محتاج مساعدة؟ فريق الدعم ديالنا هنا باش يجاوبك على كاع الاستفسارات ديالك بخصوص المنتجات أو الطلبيات.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12">
+      <div className="grid md:grid-cols-2 gap-6 sm:gap-12">
         {/* Contact Info */}
         <div className="space-y-8">
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-8 flex items-start gap-6 jumia-shadow">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-5 sm:p-8 flex items-start gap-4 sm:gap-6 jumia-shadow">
             <div className="h-14 w-14 bg-[#f68b1e]/10 rounded-sm flex items-center justify-center shrink-0">
               <MapPin className="h-6 w-6 text-[#f68b1e]" />
             </div>
@@ -37,7 +37,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-8 flex items-start gap-6 jumia-shadow">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-sm p-5 sm:p-8 flex items-start gap-4 sm:gap-6 jumia-shadow">
             <div className="h-14 w-14 bg-[#f68b1e]/10 rounded-sm flex items-center justify-center shrink-0">
               <Phone className="h-6 w-6 text-[#f68b1e]" />
             </div>
@@ -60,7 +60,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white rounded-sm p-8 md:p-12 jumia-shadow">
+        <div className="bg-white rounded-sm p-5 sm:p-8 md:p-12 jumia-shadow">
           <h2 className="text-2xl font-bold text-[#282828] mb-8">صيفط لينا رسالة</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -94,7 +94,7 @@ export default function ContactPage() {
               ></textarea>
             </div>
 
-            <Button type="submit" className="w-full h-14 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-lg rounded-sm transition-all shadow-lg">
+            <Button type="submit" className="w-full h-12 sm:h-14 bg-[#f68b1e] hover:bg-[#e67e1a] text-white font-black text-base sm:text-lg rounded-sm transition-all shadow-lg active:scale-[0.98]">
               صيفط الرسالة دابا
             </Button>
           </form>

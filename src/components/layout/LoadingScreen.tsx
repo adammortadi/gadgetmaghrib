@@ -32,7 +32,7 @@ export default function LoadingScreen() {
               opacity: [0.3, 0.5, 0.3]
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute w-[500px] h-[500px] bg-[#ff9800]/10 rounded-full blur-[120px] -z-10"
+            className="absolute w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] -z-10"
           />
 
           <div className="relative flex flex-col items-center">
@@ -50,14 +50,14 @@ export default function LoadingScreen() {
               <motion.div 
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="absolute inset-0 bg-[#ff9800]/20 blur-2xl rounded-full"
+                className="absolute inset-0 bg-indigo-600/20 blur-2xl rounded-full"
               />
               <Image
                 src="/logo.png"
                 alt="GADGETMGHRIB"
                 width={180}
                 height={180}
-                className="object-contain h-32 w-auto relative z-10"
+                className="object-contain h-32 w-auto relative z-10 brightness-110 mix-blend-screen"
                 priority
               />
             </motion.div>
@@ -69,7 +69,7 @@ export default function LoadingScreen() {
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 2.5, ease: "easeInOut" }}
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#ff9800] to-[#ffb74d] shadow-[0_0_15px_rgba(255,152,0,0.5)]"
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#4f46e5] to-[#6366f1] shadow-[0_0_15px_rgba(79,70,229,0.5)]"
                 />
               </div>
               
@@ -79,7 +79,7 @@ export default function LoadingScreen() {
                 transition={{ delay: 0.5 }}
                 className="flex justify-between items-center px-1"
               >
-                <span className="text-[10px] font-bold text-[#ff9800] uppercase tracking-[0.2em]">Initialising</span>
+                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">Initialising</span>
                 <motion.span 
                   className="text-[10px] font-mono text-gray-500"
                 >
@@ -88,6 +88,7 @@ export default function LoadingScreen() {
               </motion.div>
             </div>
           </div>
+
 
           {/* Bottom Branding */}
           <motion.div 

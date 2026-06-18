@@ -1,10 +1,20 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans, Cairo } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  variable: "--font-cairo",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Gadget Maghrib | متجرك الإلكتروني المفضل في المغرب",
@@ -13,6 +23,17 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
     apple: "/logo.png",
   }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
 
 import DynamicBackground from "@/components/layout/DynamicBackground";
@@ -25,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={`${inter.className} text-[#282828] antialiased`}>
+      <body className={`${plusJakartaSans.variable} ${cairo.variable} font-sans text-neutral-900 antialiased bg-neutral-50/50 min-h-screen`}>
         <DynamicBackground>
           <LayoutWrapper>
             {children}
