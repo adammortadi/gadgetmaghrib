@@ -45,12 +45,6 @@ export default function HeroSection() {
                 تقدا دابا
               </Button>
             </Link>
-            <Link href="/categories">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 border-white/20 text-white hover:bg-white/10 rounded-full text-base font-semibold transition-all group">
-                شوف الأقسام
-                <ArrowRight className="mr-2 h-5 w-5 group-hover:-translate-x-1 transition-transform rotate-180" />
-              </Button>
-            </Link>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-6 sm:pt-8 border-t border-white/10 mt-4">
@@ -79,21 +73,6 @@ export default function HeroSection() {
             alt="Premium Wireless Headphones"
             className="object-cover w-full h-full rounded-3xl opacity-80"
           />
-          
-          {/* Floating UI Element */}
-          <motion.div 
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-4 left-4 lg:top-1/4 lg:-left-12 lg:bottom-auto z-20 bg-black/60 backdrop-blur-xl border border-white/10 p-3 lg:p-4 rounded-2xl flex items-center gap-3 lg:gap-4"
-          >
-            <div className="h-9 w-9 lg:h-12 lg:w-12 rounded-full bg-[#ff9800]/20 flex items-center justify-center">
-              <Star className="h-4 w-4 lg:h-6 lg:w-6 text-[#ff9800] fill-current" />
-            </div>
-            <div>
-              <p className="text-white font-semibold text-sm lg:text-base">Top Rated</p>
-              <p className="text-xs lg:text-sm text-gray-400">Premium Audio</p>
-            </div>
-          </motion.div>
         </motion.div>
 
       </div>
