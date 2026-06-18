@@ -31,7 +31,7 @@ function ProductsContent() {
   });
 
   return (
-    <div className="bg-neutral-50/30 min-h-screen py-5 md:py-10">
+    <div className="min-h-screen py-5 md:py-10">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         
         {/* Mobile Filter Drawer Overlay */}

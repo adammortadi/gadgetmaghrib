@@ -12,7 +12,7 @@ export default function Home() {
   const { products } = useProductStore();
 
   return (
-    <div className="min-h-screen pb-12 sm:pb-16 bg-neutral-50/50">
+    <div className="min-h-screen pb-12 sm:pb-16">
       {/* Premium Hero Section */}
       <HeroSection />
 

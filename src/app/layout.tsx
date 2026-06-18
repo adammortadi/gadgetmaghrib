@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={`${plusJakartaSans.variable} ${cairo.variable} font-sans text-neutral-900 antialiased bg-neutral-50/50 min-h-screen`}>
+      <body className={`${plusJakartaSans.variable} ${cairo.variable} font-sans text-neutral-900 antialiased min-h-screen`}>
         <DynamicBackground>
           <LayoutWrapper>
             {children}

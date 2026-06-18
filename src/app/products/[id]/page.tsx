@@ -120,7 +120,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="min-h-screen py-4 sm:py-6 md:py-12 bg-neutral-50/50" dir="rtl">
+    <div className="min-h-screen py-4 sm:py-6 md:py-12" dir="rtl">
       <div className="container mx-auto px-3 sm:px-4 max-w-5xl">
         
         {/* Main Details Container */}
