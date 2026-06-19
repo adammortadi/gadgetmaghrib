@@ -103,30 +103,16 @@ export default function AdminDashboard() {
 
       if (isCodeMode && uploadedAssets.length > 0) {
         uploadedAssets.forEach(asset => {
-          const escapedName = asset.name.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          
-          // Match src="..." or href="..."
-          const doubleQuoteRegex = new RegExp(`(src|href)="([^"]*\\/)?${escapedName}"`, 'gi');
-          finalHtml = finalHtml.replace(doubleQuoteRegex, `$1="${asset.base64}"`);
-          
-          const singleQuoteRegex = new RegExp(`(src|href)='([^']*\\/)?${escapedName}'`, 'gi');
-          finalHtml = finalHtml.replace(singleQuoteRegex, `$1='${asset.base64}'`);
-
-          const noQuoteRegex = new RegExp(`(src|href)=([^\\s>]*\\/)?${escapedName}`, 'gi');
-          finalHtml = finalHtml.replace(noQuoteRegex, `$1="${asset.base64}"`);
-          
-          // Match url(...) in CSS/HTML
-          const doubleQuoteUrlRegex = new RegExp(`url\\("([^"]*\\/)?${escapedName}"\\)`, 'gi');
-          finalHtml = finalHtml.replace(doubleQuoteUrlRegex, `url("${asset.base64}")`);
-          if (finalCss) finalCss = finalCss.replace(doubleQuoteUrlRegex, `url("${asset.base64}")`);
-
-          const singleQuoteUrlRegex = new RegExp(`url\\('([^']*\\/)?${escapedName}'\\)`, 'gi');
-          finalHtml = finalHtml.replace(singleQuoteUrlRegex, `url('${asset.base64}')`);
-          if (finalCss) finalCss = finalCss.replace(singleQuoteUrlRegex, `url('${asset.base64}')`);
-
-          const noQuoteUrlRegex = new RegExp(`url\\(([^)]*\\/)?${escapedName}\\)`, 'gi');
-          finalHtml = finalHtml.replace(noQuoteUrlRegex, `url(${asset.base64})`);
-          if (finalCss) finalCss = finalCss.replace(noQuoteUrlRegex, `url(${asset.base64})`);
+          // Replace ALL occurrences of the filename anywhere in HTML/CSS
+          // This covers: src="...", src='...', onclick="changeImage('...')", url(...) etc.
+          while (finalHtml.includes(asset.name)) {
+            finalHtml = finalHtml.split(asset.name).join(asset.base64);
+          }
+          if (finalCss) {
+            while (finalCss.includes(asset.name)) {
+              finalCss = finalCss.split(asset.name).join(asset.base64);
+            }
+          }
         });
       }
 
