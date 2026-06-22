@@ -27,7 +27,7 @@ export default function Footer() {
             <Link href="/categories" className="hover:text-indigo-400 transition-colors">Catégories</Link>
             <Link href="/track" className="hover:text-indigo-400 transition-colors">Suivre ma commande</Link>
             <Link href="/contact" className="hover:text-indigo-400 transition-colors">Contact</Link>
-            <Link href="/terms" className="hover:text-indigo-400 transition-colors">Conditions d'utilisation</Link>
+            <Link href="/terms" className="hover:text-indigo-400 transition-colors">Conditions d&apos;utilisation</Link>
             <Link href="/privacy" className="hover:text-indigo-400 transition-colors">Politique de confidentialité</Link>
           </div>
         </div>
@@ -97,4 +97,3 @@ export default function Footer() {
     </footer>
   );
 }
-

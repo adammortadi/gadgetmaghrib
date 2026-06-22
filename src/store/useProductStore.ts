@@ -22,6 +22,7 @@ interface ProductState {
   isLoading: boolean;
   fetchProducts: () => Promise<void>;
   addProduct: (product: Product) => Promise<void>;
+  updateProduct: (id: string, product: Partial<Product>) => Promise<void>;
   removeProduct: (id: string) => Promise<void>;
 }
 
@@ -89,6 +90,24 @@ export const useProductStore = create<ProductState>((set) => ({
       }));
     } catch (error) {
       console.error('Error removing product:', error);
+      throw error;
+    }
+  },
+
+  updateProduct: async (id, updatedFields) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .update(updatedFields)
+        .eq('id', id)
+        .select(PRODUCT_COLUMNS)
+        .single();
+      if (error) throw error;
+      set((state) => ({
+        products: state.products.map((p) => p.id === id ? { ...p, ...data } : p),
+      }));
+    } catch (error) {
+      console.error('Error updating product:', error);
       throw error;
     }
   },

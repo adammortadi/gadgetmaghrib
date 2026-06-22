@@ -216,7 +216,7 @@ export default function CheckoutPage() {
             </div>
             
             <p className="text-[9px] text-center text-neutral-400 mt-5 leading-relaxed">
-              بالضغط على "تأكيد الطلب"، سيتم توجيهك إلى تطبيق WhatsApp لتأكيد الشحن مع الموزع.
+              بالضغط على &quot;تأكيد الطلب&quot;، سيتم توجيهك إلى تطبيق WhatsApp لتأكيد الشحن مع الموزع.
             </p>
           </div>
         </div>

@@ -5,20 +5,23 @@ import { useSettingsStore } from '@/store/useSettingsStore';
 
 export default function CountdownTimer() {
   const { settings } = useSettingsStore();
+  const { showTimer, timerHours, timerMinutes, timerSeconds } = settings;
   const [timeLeft, setTimeLeft] = useState({
-    hours: settings.timerHours,
-    minutes: settings.timerMinutes,
-    seconds: settings.timerSeconds
+    hours: timerHours,
+    minutes: timerMinutes,
+    seconds: timerSeconds
   });
 
   useEffect(() => {
-    if (!settings.showTimer) return;
+    if (!showTimer) return;
 
-    setTimeLeft({
-      hours: settings.timerHours,
-      minutes: settings.timerMinutes,
-      seconds: settings.timerSeconds
-    });
+    const resetTimer = window.setTimeout(() => {
+      setTimeLeft({
+        hours: timerHours,
+        minutes: timerMinutes,
+        seconds: timerSeconds
+      });
+    }, 0);
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -47,10 +50,13 @@ export default function CountdownTimer() {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [settings]);
+    return () => {
+      window.clearTimeout(resetTimer);
+      clearInterval(timer);
+    };
+  }, [showTimer, timerHours, timerMinutes, timerSeconds]);
 
-  if (!settings.showTimer) return null;
+  if (!showTimer) return null;
 
   // Calculate progress bar fill percentage (assuming a standard maximum of 24 hours)
   const totalSeconds = (timeLeft.hours * 3600) + (timeLeft.minutes * 60) + timeLeft.seconds;
@@ -110,4 +116,3 @@ export default function CountdownTimer() {
     </div>
   );
 }
-

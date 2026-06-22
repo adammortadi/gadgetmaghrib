@@ -78,6 +78,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'gdm-settings',
+      partialize: (state) => ({ settings: state.settings }),
     }
   )
 );

@@ -4,7 +4,7 @@ import React, { useState, use } from "react";
 import Image from "next/image";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Truck, Minus, Plus, ShoppingCart, CheckCircle, ChevronRight, ChevronLeft, ShieldCheck } from "lucide-react";
+import { Star, Truck, Minus, Plus, ShoppingCart, ChevronRight, ChevronLeft, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -321,4 +321,3 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     </div>
   );
 }
-

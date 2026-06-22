@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Package, ShieldCheck, HeartHandshake, Award } from "lucide-react";
+import { Package, ShieldCheck, Award } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
 import CountdownTimer from "@/components/product/CountdownTimer";
 import HeroSection from "@/components/home/HeroSection";
@@ -205,4 +205,3 @@ export default function Home() {
     </div>
   );
 }
-

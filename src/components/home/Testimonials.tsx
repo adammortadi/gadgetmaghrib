@@ -56,7 +56,7 @@ export default function Testimonials() {
                 ))}
               </div>
               <p className="text-gray-300 text-base leading-relaxed mb-8 italic">
-                "{review.content}"
+                &quot;{review.content}&quot;
               </p>
               <div className="flex items-center gap-4 mt-auto">
                 <Image 
