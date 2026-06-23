@@ -53,7 +53,7 @@ export default function CategoriesPage() {
            <h2 className="text-xl md:text-2xl font-black mb-3 text-white">ما لقيتيش لي كتقلب عليه؟</h2>
            <p className="text-neutral-400 text-xs md:text-sm mb-6 max-w-xl mx-auto leading-relaxed">تواصل معنا دابا عبر الواتساب وغادي نساعدوك نلقاو ليك أحسن منتج بأفضل ثمن فالسوق.</p>
            <a 
-            href="https://wa.me/212635734244"
+            href="https://wa.me/212747317413"
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold shadow-lg hover:bg-indigo-700 active:scale-[0.98] transition-all"

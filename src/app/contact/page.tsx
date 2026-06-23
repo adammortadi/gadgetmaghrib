@@ -43,7 +43,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white mb-2">الهاتف والبريد</h3>
-              <p className="text-gray-400 leading-relaxed mb-1">+212 635-734244</p>
+              <p className="text-gray-400 leading-relaxed mb-1">+212 747317413</p>
               <p className="text-[#f68b1e]">support@gadgetmghrib.com</p>
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function ContactPage() {
                 <h3 className="text-xl font-black">دعم فوري عبر الواتساب</h3>
                 <p className="text-sm font-bold opacity-80">نجاوبوك فقل من 5 دقائق ⚡</p>
              </div>
-             <a href="https://wa.me/212635734244" target="_blank" rel="noopener noreferrer">
+             <a href="https://wa.me/212747317413" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="h-10 w-10 fill-[#0a192f] group-hover:scale-110 transition-transform" />
              </a>
           </div>

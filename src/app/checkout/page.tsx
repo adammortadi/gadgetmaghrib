@@ -27,7 +27,7 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
     
     // Construct WhatsApp message
-    const whatsappNumber = "+212635734244";
+    const whatsappNumber = "+212747317413";
     const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
     const productList = items.map(item => `* ${item.name} (x${item.quantity}) - ${item.price} DH`).join('\n');
     

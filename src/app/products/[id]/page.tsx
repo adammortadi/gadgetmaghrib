@@ -98,7 +98,22 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     router.push("/checkout");
   };
 
+  let productDetails: any = null;
+  let isRawHtml = false;
+
   if (product.customHtml) {
+    if (product.customHtml.startsWith('{"_isJsonDetails":true')) {
+      try {
+        productDetails = JSON.parse(product.customHtml);
+      } catch(e) {
+        isRawHtml = true;
+      }
+    } else {
+      isRawHtml = true;
+    }
+  }
+
+  if (isRawHtml && product.customHtml) {
     return (
       <div className="min-h-screen bg-white overflow-x-hidden relative" dir="rtl">
         {product.customCss && (
@@ -291,6 +306,51 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
 
             </div>
           </div>
+
+          {/* Detailed Product Info Section */}
+          {productDetails && (
+            <div className="mt-12 pt-8 border-t border-neutral-100">
+              {productDetails.description && (
+                <div className="mb-10 text-right">
+                  <h3 className="text-xl font-black text-neutral-900 mb-4">تفاصيل المنتج</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">{productDetails.description}</p>
+                </div>
+              )}
+              
+              {productDetails.features && productDetails.features.length > 0 && (
+                <div className="mb-10 text-right">
+                  <h3 className="text-xl font-black text-neutral-900 mb-4">مميزات المنتج</h3>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {productDetails.features.map((feat: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <Star className="h-4 w-4 text-[#f68b1e] mt-0.5 flex-shrink-0" />
+                        <span className="text-sm font-bold text-slate-700">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {productDetails.specifications && productDetails.specifications.length > 0 && (
+                <div className="text-right">
+                  <h3 className="text-xl font-black text-neutral-900 mb-4">المواصفات التقنية</h3>
+                  <div className="overflow-hidden rounded-xl border border-slate-100">
+                    <table className="w-full text-sm text-right">
+                      <tbody>
+                        {productDetails.specifications.map((spec: any, idx: number) => (
+                          <tr key={idx} className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}>
+                            <td className="py-3 px-4 font-bold text-slate-900 w-1/3 border-l border-slate-100 bg-slate-50/50">{spec.key}</td>
+                            <td className="py-3 px-4 text-slate-600">{spec.value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
 
       </div>

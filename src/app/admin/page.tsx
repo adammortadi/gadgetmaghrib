@@ -61,7 +61,6 @@ export default function AdminDashboard() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // Product Form State
   const [productForm, setProductForm] = useState<{
     name: string;
     price: string;
@@ -72,8 +71,9 @@ export default function AdminDashboard() {
     images: string[];
     rating: string;
     reviews: string;
-    customHtml: string;
-    customCss: string;
+    description: string;
+    features: string[];
+    specifications: { key: string; value: string }[];
   }>({
     name: "",
     price: "",
@@ -84,8 +84,9 @@ export default function AdminDashboard() {
     images: [],
     rating: "5.0",
     reviews: "0",
-    customHtml: "",
-    customCss: ""
+    description: "",
+    features: [],
+    specifications: []
   });
 
   // Manual Order Form State
@@ -141,15 +142,29 @@ export default function AdminDashboard() {
       images: [],
       rating: "5.0",
       reviews: "0",
-      customHtml: "",
-      customCss: ""
+      description: "",
+      features: [],
+      specifications: []
     });
-    setIsAdvancedOpen(false);
     setIsAddModalOpen(true);
   };
 
   const openEditModal = (product: Product) => {
     setEditingProductId(product.id);
+    
+    let description = "";
+    let features: string[] = [];
+    let specifications: { key: string; value: string }[] = [];
+    
+    if (product.customHtml && product.customHtml.startsWith('{"_isJsonDetails":true')) {
+      try {
+        const parsed = JSON.parse(product.customHtml);
+        description = parsed.description || "";
+        features = parsed.features || [];
+        specifications = parsed.specifications || [];
+      } catch (e) {}
+    }
+
     setProductForm({
       name: product.name,
       price: String(product.price),
@@ -160,10 +175,10 @@ export default function AdminDashboard() {
       images: product.images || [],
       rating: String(product.rating ?? 5.0),
       reviews: String(product.reviews ?? 0),
-      customHtml: product.customHtml || "",
-      customCss: product.customCss || ""
+      description,
+      features,
+      specifications
     });
-    setIsAdvancedOpen(!!(product.customHtml || product.customCss));
     setIsAddModalOpen(true);
   };
 
@@ -189,8 +204,13 @@ export default function AdminDashboard() {
       badge: productForm.badge || undefined,
       stock: Number(productForm.stock) || 0,
       backgroundColor: productForm.backgroundColor,
-      customHtml: productForm.customHtml || undefined,
-      customCss: productForm.customCss || undefined
+      customHtml: JSON.stringify({
+        _isJsonDetails: true,
+        description: productForm.description,
+        features: productForm.features,
+        specifications: productForm.specifications
+      }),
+      customCss: undefined
     };
 
     try {
@@ -1188,54 +1208,69 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  {/* TAB: COLLAPSIBLE ADVANCED SETTINGS */}
-                  <div className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
-                    <button
-                      type="button"
-                      onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                      className="w-full px-5 py-4 flex items-center justify-between text-right font-bold text-slate-700 hover:bg-slate-50 transition-colors text-sm"
-                    >
-                      <span className="flex items-center gap-2">
-                        <FileCode2 className="h-4.5 w-4.5 text-slate-400" />
-                        تخصيص متقدم (كود صفحة الهبوط)
-                      </span>
-                      {isAdvancedOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                    </button>
+                  {/* TAB: DETAILED PRODUCT INFO */}
+                  <div className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50 p-5 space-y-6">
+                    <h3 className="text-sm font-black text-slate-800 border-b border-slate-200 pb-2">تفاصيل إضافية للمنتج (تظهر للزبون)</h3>
+                    
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-600 block">وصف المنتج</label>
+                      <textarea
+                        rows={4}
+                        value={productForm.description}
+                        onChange={(e) => setProductForm({...productForm, description: e.target.value})}
+                        placeholder="أدخل وصفاً مشوقاً للمنتج..."
+                        className="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#f68b1e]"
+                      />
+                    </div>
 
-                    <AnimatePresence initial={false}>
-                      {isAdvancedOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="px-5 pb-5 pt-1 space-y-4 border-t border-slate-100 bg-white"
-                        >
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-600 block">كود HTML المخصص (اختياري)</label>
-                            <textarea
-                              rows={5}
-                              value={productForm.customHtml}
-                              onChange={(e) => setProductForm({...productForm, customHtml: e.target.value})}
-                              placeholder="أدخل كود HTML الخاص بصفحة الهبوط هنا..."
-                              className="w-full p-3 bg-slate-50 border-0 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#f68b1e]"
-                              dir="ltr"
-                            />
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <label className="text-xs font-bold text-slate-600">مميزات المنتج</label>
+                        <button type="button" onClick={() => setProductForm({...productForm, features: [...productForm.features, ""]})} className="text-[#f68b1e] text-xs font-bold flex items-center gap-1 hover:underline"><Plus className="h-3 w-3"/> إضافة ميزة</button>
+                      </div>
+                      <div className="space-y-2">
+                        {productForm.features.map((feat, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <Input value={feat} onChange={(e) => {
+                              const newFeats = [...productForm.features];
+                              newFeats[idx] = e.target.value;
+                              setProductForm({...productForm, features: newFeats});
+                            }} placeholder="مثال: بطارية تدوم 24 ساعة..." className="bg-white border-slate-200" />
+                            <button type="button" onClick={() => {
+                              const newFeats = productForm.features.filter((_, i) => i !== idx);
+                              setProductForm({...productForm, features: newFeats});
+                            }} className="bg-red-50 text-red-500 px-3 rounded-xl hover:bg-red-100"><Trash2 className="h-4 w-4"/></button>
                           </div>
+                        ))}
+                      </div>
+                    </div>
 
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-600 block">كود CSS المخصص (اختياري)</label>
-                            <textarea
-                              rows={4}
-                              value={productForm.customCss}
-                              onChange={(e) => setProductForm({...productForm, customCss: e.target.value})}
-                              placeholder="أدخل كود CSS الخاص بصفحة الهبوط هنا..."
-                              className="w-full p-3 bg-slate-50 border-0 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#f68b1e]"
-                              dir="ltr"
-                            />
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <label className="text-xs font-bold text-slate-600">المواصفات التقنية</label>
+                        <button type="button" onClick={() => setProductForm({...productForm, specifications: [...productForm.specifications, {key: "", value: ""}]})} className="text-[#f68b1e] text-xs font-bold flex items-center gap-1 hover:underline"><Plus className="h-3 w-3"/> إضافة مواصفة</button>
+                      </div>
+                      <div className="space-y-2">
+                        {productForm.specifications.map((spec, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <Input value={spec.key} onChange={(e) => {
+                              const newSpecs = [...productForm.specifications];
+                              newSpecs[idx].key = e.target.value;
+                              setProductForm({...productForm, specifications: newSpecs});
+                            }} placeholder="مثال: الوزن" className="bg-white border-slate-200 w-1/3" />
+                            <Input value={spec.value} onChange={(e) => {
+                              const newSpecs = [...productForm.specifications];
+                              newSpecs[idx].value = e.target.value;
+                              setProductForm({...productForm, specifications: newSpecs});
+                            }} placeholder="مثال: 500 غرام" className="bg-white border-slate-200 flex-1" />
+                            <button type="button" onClick={() => {
+                              const newSpecs = productForm.specifications.filter((_, i) => i !== idx);
+                              setProductForm({...productForm, specifications: newSpecs});
+                            }} className="bg-red-50 text-red-500 px-3 rounded-xl hover:bg-red-100"><Trash2 className="h-4 w-4"/></button>
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Actions buttons */}
