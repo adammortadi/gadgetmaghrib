@@ -53,7 +53,7 @@ export default function ContactPage() {
                 <h3 className="text-xl font-black">دعم فوري عبر الواتساب</h3>
                 <p className="text-sm font-bold opacity-80">نجاوبوك فقل من 5 دقائق ⚡</p>
              </div>
-             <a href="https://wa.me/212747317413" target="_blank" rel="noopener noreferrer">
+             <a href="https://wa.me/212774317413" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="h-10 w-10 fill-[#0a192f] group-hover:scale-110 transition-transform" />
              </a>
           </div>
