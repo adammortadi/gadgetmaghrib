@@ -16,10 +16,12 @@ const CATEGORIES = [
 
 const BRANDS = ["Apple", "Samsung", "Sony", "Logitech", "JBL", "Xiaomi"];
 
+import ProductSkeleton from "@/components/product/ProductSkeleton";
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
-  const products = useProductStore((state) => state.products);
+  const { products, isLoading } = useProductStore();
   
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -184,7 +186,7 @@ function ProductsContent() {
                 <h1 className="text-base md:text-lg font-extrabold text-neutral-900">
                   {searchQuery ? `نتائج البحث عن "${searchQuery}"` : "جميع المنتجات"}
                 </h1>
-                <p className="text-[10px] md:text-xs text-neutral-400 mt-0.5 font-medium">{filteredProducts.length} منتج وجدناه</p>
+                <p className="text-[10px] md:text-xs text-neutral-400 mt-0.5 font-medium">{isLoading ? "..." : filteredProducts.length} منتج وجدناه</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="hidden md:flex items-center gap-2">
@@ -207,7 +209,13 @@ function ProductsContent() {
             </div>
 
             {/* Product Grid */}
-            {filteredProducts.length > 0 ? (
+            {isLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {Array(8).fill(0).map((_, i) => (
+                  <ProductSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />

@@ -4,12 +4,13 @@ import React from "react";
 import Link from "next/link";
 import { Package, ShieldCheck, Award } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
+import ProductSkeleton from "@/components/product/ProductSkeleton";
 import CountdownTimer from "@/components/product/CountdownTimer";
 import HeroSection from "@/components/home/HeroSection";
 import { useProductStore } from "@/store/useProductStore";
 
 export default function Home() {
-  const { products } = useProductStore();
+  const { products, isLoading } = useProductStore();
 
   return (
     <div className="min-h-screen pb-12 sm:pb-16">
@@ -45,7 +46,11 @@ export default function Home() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-16 sm:mb-20">
-          {products.length > 0 ? (
+          {isLoading ? (
+            Array(6).fill(0).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))
+          ) : products.length > 0 ? (
             products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))
