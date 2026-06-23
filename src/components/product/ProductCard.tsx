@@ -37,6 +37,17 @@ export default function ProductCard({ product }: { product: Product }) {
       image: product.image,
       quantity: 1
     });
+    // TikTok Pixel - AddToCart event
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('AddToCart', {
+        content_id: product.id,
+        content_name: product.name,
+        content_type: 'product',
+        currency: 'MAD',
+        value: product.price,
+        quantity: 1,
+      });
+    }
     toast.success("تمت الإضافة إلى السلة!");
   };
 

@@ -38,6 +38,20 @@ export default function CheckoutPage() {
 
     // Redirect to WhatsApp
     setTimeout(() => {
+      // TikTok Pixel - Purchase event
+      if (typeof window !== 'undefined' && (window as any).ttq) {
+        (window as any).ttq.track('PlaceAnOrder', {
+          content_type: 'product',
+          currency: 'MAD',
+          value: getTotal(),
+          contents: items.map(item => ({
+            content_id: item.id,
+            content_name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        });
+      }
       setIsSubmitting(false);
       toast.success("تم تأكيد الطلب! سيتم توجيهك إلى الواتساب.");
       clearCart();

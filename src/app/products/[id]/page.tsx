@@ -45,6 +45,19 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // TikTok Pixel - ViewContent event
+  useEffect(() => {
+    if (product && typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('ViewContent', {
+        content_id: product.id,
+        content_name: product.name,
+        content_type: 'product',
+        currency: 'MAD',
+        value: product.price,
+      });
+    }
+  }, [product]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
