@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 
 import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
-import { useSettingsStore } from "@/store/useSettingsStore";
 import CountdownTimer from "@/components/product/CountdownTimer";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,7 +21,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { products, isLoading } = useProductStore();
   const addItem = useCartStore((state) => state.addItem);
-  const setBackgroundOverride = useSettingsStore((state) => state.setBackgroundOverride);
   
   // Sticky bar state
   const [showStickyBar, setShowStickyBar] = useState(false);
@@ -32,13 +30,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   const allImages = product ? [product.image, ...(product.images || []).filter(img => img !== product.image)] : [];
   const selectedImageIndex = currentImageIndex < allImages.length ? currentImageIndex : 0;
 
-  // Set per-product background color
-  useEffect(() => {
-    if (product?.backgroundColor) {
-      setBackgroundOverride(product.backgroundColor);
-    }
-    return () => setBackgroundOverride(null);
-  }, [product, setBackgroundOverride]);
+  // Removed background override per user request
 
   // Scroll handler for mobile sticky bar
   useEffect(() => {
